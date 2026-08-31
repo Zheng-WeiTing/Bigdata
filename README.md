@@ -53,6 +53,15 @@ http://localhost:81/
 - 路徑：首頁
 
 ![作品集網頁](docs/images/new.png)
+
+### 圖片來源與授權
+
+網站中部分政治人物圖片取自 Wikimedia Commons：
+
+- Donald Trump：Photo by Daniel Torok，Public Domain（U.S. Government Work）
+- 賴清德：圖片來源為中華民國總統府，依政府網站資料開放宣告使用
+- 柯文哲：圖片來源為中華民國總統府，依政府網站資料開放宣告使用
+
 ---
 ## 4. 自己的特色分析：104 人力銀行分析（職缺）
 - 網址：http://localhost:81/104/
