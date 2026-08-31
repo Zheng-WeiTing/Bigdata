@@ -52,13 +52,13 @@ http://localhost:81/
 - 網址：http://localhost:81/
 - 路徑：首頁
 
-![作品集網頁](docs/images/new.png)
+![作品集網頁](docs/images/new_.png)
 
 ### 圖片來源與授權
 
 網站中部分政治人物圖片取自 Wikimedia Commons：
 
-- Donald Trump：Photo by Daniel Torok，Public Domain（U.S. Government Work）
+- Donald Trump：該圖片僅明確標示於美國屬 Public Domain，考量不同地區著作權規範，本網站不使用該圖片。
 - 賴清德：圖片來源為中華民國總統府，依政府網站資料開放宣告使用
 - 柯文哲：圖片來源為中華民國總統府，依政府網站資料開放宣告使用
 
