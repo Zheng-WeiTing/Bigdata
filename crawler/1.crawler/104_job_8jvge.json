@@ -1,0 +1,195 @@
+{
+  "data": {
+    "corpImageRight": {
+      "corpImageRight": {
+        "imageUrl": "",
+        "link": ""
+      }
+    },
+    "header": {
+      "corpImageTop": {
+        "imageUrl": "",
+        "link": ""
+      },
+      "jobName": "資料工程師/後端工程師 (Data Engineer / Backend Engineer)",
+      "appearDate": "2025/03/26",
+      "custName": "典通股份有限公司",
+      "custUrl": "https://www.104.com.tw/company/ok5yn68",
+      "analysisType": 2,
+      "analysisUrl": "//www.104.com.tw/jobs/apply/analysis/8jvge",
+      "isSaved": false,
+      "isApplied": false,
+      "applyDate": "",
+      "userApplyCount": 0,
+      "isActivelyHiring": true
+    },
+    "contact": {
+      "hrName": "蔡小姐",
+      "email": "",
+      "visit": "",
+      "phone": [],
+      "other": "",
+      "reply": ""
+    },
+    "environmentPic": {
+      "environmentPic": [
+        {
+          "thumbnailLink": "https://static.104.com.tw/b_profile/cust_picture/4000/53462114000/env/s_890328564412207813.jpg?v=20240729213021",
+          "link": "https://static.104.com.tw/b_profile/cust_picture/4000/53462114000/env/l_890328564412207813.jpg?v=20240729213021",
+          "description": "門廳"
+        },
+        {
+          "thumbnailLink": "https://static.104.com.tw/b_profile/cust_picture/4000/53462114000/env/s_890328564412207760.jpg?v=20240729213021",
+          "link": "https://static.104.com.tw/b_profile/cust_picture/4000/53462114000/env/l_890328564412207760.jpg?v=20240729213021",
+          "description": "寬敞辦公室"
+        },
+        {
+          "thumbnailLink": "https://static.104.com.tw/b_profile/cust_picture/4000/53462114000/env/s_962627717425709836.jpg?v=20240729213021",
+          "link": "https://static.104.com.tw/b_profile/cust_picture/4000/53462114000/env/l_962627717425709836.jpg?v=20240729213021",
+          "description": "休息、充電空間"
+        },
+        {
+          "thumbnailLink": "https://static.104.com.tw/b_profile/cust_picture/4000/53462114000/env/s_890328564410863171.jpg?v=20240729213021",
+          "link": "https://static.104.com.tw/b_profile/cust_picture/4000/53462114000/env/l_890328564410863171.jpg?v=20240729213021",
+          "description": "員工協力製作賀年卡片，是公司重要的傳統"
+        },
+        {
+          "thumbnailLink": "https://static.104.com.tw/b_profile/cust_picture/4000/53462114000/env/s_890328564410863170.jpg?v=20240729213021",
+          "link": "https://static.104.com.tw/b_profile/cust_picture/4000/53462114000/env/l_890328564410863170.jpg?v=20240729213021",
+          "description": "員工協力製作賀年卡片，是公司重要的傳統"
+        }
+      ],
+      "corpImageBottom": {
+        "imageUrl": "https://static.104.com.tw/b_profile/cust_picture/4000/53462114000/custintroduce/image1.jpg?v=20240729213021",
+        "link": "https://www.dsigroup.com.tw/"
+      }
+    },
+    "condition": {
+      "acceptRole": {
+        "role": [],
+        "disRole": {
+          "needHandicapCompendium": false,
+          "disability": []
+        }
+      },
+      "workExp": "1年以上",
+      "edu": "不拘",
+      "major": [],
+      "language": [
+        {
+          "code": 18,
+          "language": "中文",
+          "ability": {
+            "listening": "精通",
+            "speaking": "精通",
+            "reading": "精通",
+            "writing": "精通"
+          }
+        },
+        {
+          "code": 1,
+          "language": "英文",
+          "ability": {
+            "listening": "中等",
+            "speaking": "中等",
+            "reading": "中等",
+            "writing": "中等"
+          }
+        }
+      ],
+      "localLanguage": [],
+      "specialty": [
+        {
+          "code": "12001003025",
+          "description": "Java"
+        },
+        {
+          "code": "12001004032",
+          "description": "MySQL"
+        },
+        {
+          "code": "12001004038",
+          "description": "PL/SQL"
+        },
+        {
+          "code": "12001004039",
+          "description": "PostgreSQL"
+        },
+        {
+          "code": "12001005023",
+          "description": "AWS"
+        },
+        {
+          "code": "12001006034",
+          "description": "Node.js"
+        },
+        {
+          "code": "12001006045",
+          "description": "JIRA"
+        }
+      ],
+      "skill": [],
+      "certificate": [],
+      "driverLicense": [],
+      "other": "需求條件：\n1. 熟練掌握 Node.js 或 Java，具有設計並開發後端API服務的經驗。\n2. 熟悉資料庫技術，特別是 SQL 和 Redis，並具備架構設計及性能優化經驗；熟悉MongoDB加分。\n3. 熟悉後端系統架構，具備基礎設施管理經驗（如伺服器配置與部署）。\n4. 對數據處理與數據管道建設有實務經驗。\n5. 優秀的問題解決能力，能獨立作業提出解決方案。\n\n加分條件：\n1. 具備CI/CD流程設定與自動化經驗。\n2. 熟悉Docker等容器化技術。\n3. 有雲端服務（如AWS、GCP）基礎設施布置與管理經驗。"
+    },
+    "welfare": {
+      "tag": [],
+      "welfare": "●正職員工福利制度●\n1.三節禮金、年終獎金(1個月)、績效獎金(按全年毛利、年終盈餘固定比例分紅)。\n2.按公司盈餘提撥員工福利金，作為額外員工福利措施、舉辦活動之用。\n3.勞保、健保、勞退、業主責任險、平安意外險、疫苗險。\n4.員工特休假、婚喪假、生理假、育嬰假。\n5.交通津貼、生日禮金。\n6.任職滿一年提供國內外旅遊補助、健檢補助。\n7.不定期員工聚餐。\n8.尾牙或春酒。\n9.企業內訓、外訓補助。\n10.員工急難救助。\n\n●電訪人員福利制度●\n依年資享尾牙或春酒\n表現良好者享年度調薪\n視專案提供專案獎金或排班獎金",
+      "legalTag": []
+    },
+    "jobDetail": {
+      "jobDescription": "歡迎有熱情者加入我們的團隊！\n我們是一家專注於大數據的創新公司，正在尋找一位同時具備資料工程與後端開發能力的人才，負責設計並管理高效能的數據基礎設施和後端系統，確保資料服務穩定可靠，並為內部分析師及其他業務單位提供良好的數據支持。\n\n主要職責：\n1. 使用 Node.js 或 Java 開發並維護高效的API Server，設計穩定可靠的後端服務。\n2. 設計並優化資料庫架構，以 SQL 和 Redis 為主，MongoDB 為次要，確保高效的數據存取與性能。\n3. 負責資料基礎設施的布置與管理，包括機器環境設定及基礎架構設計（Infrastructure）。\n4. 整合數據管道和資料流處理流程，支持數據分析需求及前端服務。\n5. 與數據分析師、前端工程師及其他業務部門緊密協作，理解並滿足多樣化的數據需求。\n\n您可以透過以下聯結認識我們：\nhttps://www.dsigroup.com.tw/",
+      "jobCategory": [
+        {
+          "code": "2007001016",
+          "description": "後端工程師"
+        },
+        {
+          "code": "2007001022",
+          "description": "資料工程師"
+        }
+      ],
+      "salary": "待遇面議",
+      "salaryMin": 0,
+      "salaryMax": 0,
+      "salaryType": 10,
+      "jobType": 1,
+      "workType": [],
+      "addressNo": "6001001001",
+      "addressRegion": "台北市中正區",
+      "addressArea": "台北市",
+      "addressDetail": "愛國西路9號7樓",
+      "industryArea": "",
+      "longitude": "121.5077808",
+      "latitude": "25.0373206",
+      "manageResp": "不需負擔管理責任",
+      "businessTrip": "無需出差外派",
+      "workPeriod": "日班",
+      "vacationPolicy": "依公司規定",
+      "startWorkingDay": "不限",
+      "hireType": 0,
+      "delegatedRecruit": "",
+      "needEmp": "1~2人",
+      "landmark": "距捷運小南門站約400公尺",
+      "remoteWork": null
+    },
+    "switch": "on",
+    "custLogo": "https://static.104.com.tw/b_profile/cust_picture/4000/53462114000/logo.png?v=20240729213021",
+    "postalCode": "100",
+    "closeDate": "",
+    "industry": "工商顧問服務業",
+    "custNo": "53462114000",
+    "reportUrl": "https://www.104.com.tw/feedback?category=2&custName=%E5%85%B8%E9%80%9A%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8&jobName=%E8%B3%87%E6%96%99%E5%B7%A5%E7%A8%8B%E5%B8%AB%2F%E5%BE%8C%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%B8%AB+%28Data+Engineer+%2F+Backend+Engineer%29",
+    "industryNo": "1008003001",
+    "employees": "暫不提供",
+    "chinaCorp": false
+  },
+  "metadata": {
+    "enableHTML": false,
+    "hiddenBanner": false,
+    "seo": {
+      "noindex": false
+    }
+  }
+}

@@ -1,0 +1,407 @@
+{% extends 'base.html' %}
+
+{% block title %}
+川普聲量觀察
+{% endblock %}
+
+{% block content %}
+
+<div class="col-lg-12">
+  <h1>川普聲量觀察</h1>
+  <p>針對一個你關心的人、事、物做深入的分析</p>
+</div>
+
+<!-- 顯示區塊 -->
+<div class="col-lg-6 mb-3">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="h6 text-uppercase mb-0">
+        資料週期：資料截止時間的前 4 週
+      </h3>
+    </div>
+
+    <div class="card-body">
+      <div class="row">
+
+        <!-- Leaderboard Container -->
+        <div class="container-fluid">
+
+          <!-- Leaderboard Heading -->
+          <h3>網路聲量</h3>
+
+          <p>
+            網路聲量（Share of Voice）是什麼？
+            新聞報導有多少篇新聞提及這組關鍵字，聲量越高表示能見度越高。
+          </p>
+
+          <p>
+            總篇數：有多少篇新聞提到；
+            總次數：在相關新聞中被提到多少次。
+          </p>
+
+          <hr>
+
+          <!-- Leaderboard Content -->
+          <div id="share_of_voice"></div>
+
+        </div>
+        <!-- /.container -->
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 區塊結束 -->
+
+
+<!-- 繪圖區塊 -->
+<div class="col-lg-6 mb-3">
+  <div class="card">
+
+    <div class="card-header">
+      <h3 class="h6 text-uppercase mb-0">
+        聲量分布情況
+      </h3>
+    </div>
+
+    <div class="card-body">
+
+      <!-- description -->
+      <h3>依據新聞類別統計網路聲量</h3>
+
+      <p>在哪一類別的新聞中被報導最多篇？</p>
+
+      <hr>
+
+      <canvas id="bar_chart"></canvas>
+
+    </div>
+  </div>
+</div>
+<!-- 區塊結束 -->
+
+
+<!-- 顯示區塊 -->
+<div class="col-lg-6 mb-3">
+  <div class="card">
+
+    <div class="card-header">
+      <h3 class="h6 text-uppercase mb-0">
+        聲量變化
+      </h3>
+    </div>
+
+    <div class="card-body">
+
+      <!-- description -->
+      <h3>依據時間顯示聲量的變化</h3>
+
+      <p>在哪個時間點被新聞報導最多？</p>
+
+      <hr>
+
+      <canvas id="line_chart"></canvas>
+
+    </div>
+  </div>
+</div>
+<!-- 區塊結束 -->
+
+
+<!-- 使用 Django Template 語法 -->
+<div class="col-lg-6 mb-3">
+  <div class="card">
+
+    <div class="card-header">
+      <h3 class="h6 text-uppercase mb-0">
+        聲量分布情況（使用 Django Template 語法）
+      </h3>
+    </div>
+
+    <div class="card-body">
+
+      <!-- description -->
+      <h3>依據新聞類別統計網路聲量</h3>
+
+      <p>在哪一類別的新聞中被報導最多篇？</p>
+
+      <p>使用 Django Template 語法</p>
+
+      <hr>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+
+          <thead>
+            <tr>
+              <th>新聞類別</th>
+              <th>聲量（篇數）</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            {% if categroy_frequency %}
+
+              <!-- 使用 Django Template 語法：for 迴圈，將資料一筆一筆印出來 -->
+              {% for category, freq in categroy_frequency %}
+
+              <tr>
+                <td>{{ category }}</td>
+                <td>{{ freq }}</td>
+              </tr>
+
+              {% endfor %}
+
+            {% endif %}
+
+          </tbody>
+
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- 區塊結束 -->
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<!-- 繪製 line chart 會用到，必須在 Chart.js 之前先載入 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+
+<!-- 程式碼區 -->
+<script>
+  // JavaScript 讀取 Django 後端傳過來的資料
+  // safe 是避免 Django 將部分特殊符號進行 HTML 轉換
+
+  const freqByCate = {{ freqByCate|safe }};
+  const news_category = {{ category|safe }};
+  const freqByDate = {{ freqByDate|safe }};
+  const num_occurrence = {{ num_occurrence|safe }};
+  const num_frequency = {{ num_frequency|safe }};
+
+  const photo = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/June_2026_Official_Portrait_of_Donald_J._Trump_by_Daniel_Torok_%28cropped%29.jpg/500px-June_2026_Official_Portrait_of_Donald_J._Trump_by_Daniel_Torok_%28cropped%29.jpg";
+
+
+  // 顯示資料及繪製圖表
+  displayShareOfVoice();
+  drawBarChart();
+  showLineChart();
+
+
+  // 顯示網路聲量
+  function displayShareOfVoice() {
+
+    let html_snippet = `
+      <div class="row">
+
+        <div class="col-md-4">
+          <a href="#">
+            <img
+              class="img-fluid rounded mb-3 mb-md-0"
+              src="${photo}"
+              alt="川普照片"
+            >
+          </a>
+        </div>
+
+        <div class="col-md-8">
+          <h1>總篇數：${num_occurrence} 篇</h1>
+          <h1>總次數：${num_frequency} 次</h1>
+        </div>
+
+      </div>
+
+      <hr>
+    `;
+
+    const new_div = document.createElement("div");
+
+    new_div.innerHTML = html_snippet;
+
+    document
+      .getElementById("share_of_voice")
+      .appendChild(new_div);
+  }
+
+
+  // 繪製長條圖
+  function drawBarChart() {
+
+    const freq_values = freqByCate;
+    const news_categories = news_category;
+
+    const data = {
+
+      labels: news_categories,
+
+      datasets: [
+        {
+          label: "川普聲量",
+
+          data: freq_values,
+
+          backgroundColor: randomColors(freq_values.length),
+
+          borderColor: randomColors(freq_values.length),
+
+          borderWidth: 1
+        }
+      ]
+    };
+
+
+    const options = {
+
+      responsive: true,
+
+      scales: {
+
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true
+            }
+          }
+        ]
+
+      }
+    };
+
+
+    const barChartElem =
+      document.getElementById("bar_chart");
+
+
+    new Chart(barChartElem, {
+
+      type: "bar",
+
+      data: data,
+
+      options: options
+
+    });
+  }
+
+
+  // 繪製折線圖
+  function showLineChart() {
+
+    const lineChartElem = document
+      .getElementById("line_chart")
+      .getContext("2d");
+
+    const freq_values = freqByDate;
+
+
+    const myoptions = {
+
+      type: "line",
+
+      data: {
+
+        datasets: [
+          {
+            label: "川普聲量",
+
+            borderColor: randomColors(1),
+
+            backgroundColor: randomColors(1),
+
+            borderWidth: 2,
+
+            data: freq_values
+          }
+        ]
+      },
+
+      options: {
+
+        responsive: true,
+
+        legend: {
+          display: false
+        },
+
+        scales: {
+
+          xAxes: [
+            {
+              type: "time",
+
+              time: {
+                unit: "day",
+
+                displayFormats: {
+                  day: "MM/DD"
+                }
+              }
+            }
+          ],
+
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true
+              },
+
+              display: true,
+
+              scaleLabel: {
+                display: true,
+                labelString: "出現次數"
+              }
+            }
+          ]
+
+        }
+      }
+    };
+
+
+    // 如果已經存在舊圖表，先清除
+    if (window.time_line_chart) {
+      window.time_line_chart.destroy();
+    }
+
+
+    // 建立新的折線圖
+    window.time_line_chart =
+      new Chart(lineChartElem, myoptions);
+  }
+
+
+  // 產生多個隨機顏色
+  function randomColors(length) {
+
+    const pool = [];
+
+    for (let i = 0; i < length; i++) {
+      pool.push(dynamicColors());
+    }
+
+    return pool;
+  }
+
+
+  // 產生一個隨機顏色
+  function dynamicColors() {
+
+    const r = Math.floor(Math.random() * 255);
+    const g = Math.floor(Math.random() * 255);
+    const b = Math.floor(Math.random() * 255);
+
+    return "rgba(" + r + "," + g + "," + b + ",0.3)";
+  }
+
+</script>
+
+{% endblock %}

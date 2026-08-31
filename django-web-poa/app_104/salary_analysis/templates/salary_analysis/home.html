@@ -1,0 +1,487 @@
+{% extends '104/base.html' %}
+{% load static %}
+
+{% block page_title %}薪資分析{% endblock %}
+
+{% block extra_css %}
+<style>
+/* map-container：地圖外層容器 */
+#map-container {
+    width: 100%;
+    background-color: rgb(247, 244, 206);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(64, 73, 118, 0.1);
+}
+
+/* map-title：地圖標題 */
+.map-title {
+    width: 100%;
+    font-size: 22px;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* map-wrapper：圖片與 Icon 共用定位容器 */
+#map-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* 台灣地圖 */
+#map-wrapper img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+}
+
+/* map-icon：地圖 Icon */
+.map-icon {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+    transition: transform 0.2s, color 0.2s;
+    color: rgb(114, 4, 12);
+    z-index: 5;
+}
+
+.map-icon i {
+    font-size: 24px;
+    line-height: 24px;
+}
+
+.map-icon:hover,
+.map-icon.active {
+    color: rgb(47, 53, 114);
+    transform: translate(-50%, -50%) scale(1.2);
+}
+
+.map-icon:hover .vacancy-badge,
+.map-icon.active .vacancy-badge {
+    background-color: rgb(47, 53, 114);
+}
+
+/* vacancy-badge：職缺數量徽章 */
+.vacancy-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgb(114, 4, 12);
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    transition: background-color 0.2s;
+}
+
+/* all-regions-wrapper：全部地區按鈕區 */
+.all-regions-wrapper {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* all-regions-btn：全部地區按鈕 */
+.all-regions-btn {
+    width: 100px;
+    padding: 5px 10px;
+    background-color: #6d6f5e;
+    color: #ffe9d7;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.all-regions-btn:hover {
+    background-color: #40452e;
+    color: #ffffff;
+}
+
+/* chart-container：圖表容器 */
+#chart-container {
+    position: relative;
+    width: 100%;
+    height: 680px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(64, 73, 118, 0.1);
+}
+
+#salaryChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* 手機 */
+@media (max-width: 576px) {
+    #map-container {
+        padding: 15px;
+    }
+
+    #chart-container {
+        height: 500px;
+        padding: 15px;
+    }
+
+    .map-title {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    #map-wrapper {
+        max-width: 320px;
+    }
+
+    .map-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .map-icon i {
+        font-size: 20px;
+        line-height: 20px;
+    }
+
+    .vacancy-badge {
+        width: 16px;
+        height: 16px;
+        top: -8px;
+        font-size: 8px;
+    }
+
+    .all-regions-wrapper {
+        margin-top: 15px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- salary-layout：整個薪資分析左右布局 -->
+<div class="container-fluid px-3 px-md-4 px-xl-5 py-4 py-xl-5">
+    <div class="row g-4">
+
+        <!-- left-panel：左側地圖區 -->
+        <div class="col-12 col-lg-4">
+            <div id="map-container">
+
+                <!-- map-title：地圖標題 -->
+                <div class="map-title">臺灣職缺分佈圖</div>
+
+                <!-- map-wrapper：地圖圖片和 Icon 共用同一個定位容器 -->
+                <div id="map-wrapper">
+                    <img src="{% static 'salary_analysis/images/Taiwan1.png' %}" alt="Taiwan Map">
+
+                    <!-- map-icon：Icon 由 JavaScript 動態加入 -->
+                </div>
+
+                <!-- all-regions-wrapper：全部地區 -->
+                <div class="all-regions-wrapper">
+                    <button class="all-regions-btn">全部地區</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- right-panel：右側圖表區 -->
+        <div class="col-12 col-lg-8">
+
+            <!-- chart-container：薪資圖表 -->
+            <div id="chart-container">
+                <canvas id="salaryChart"></canvas>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+let currentArea = '';
+let salaryChart = null;
+
+/* 各縣市 Icon 座標 */
+const locations = {
+    '北部': [
+        { area: '台北', x: 73.8, y: 4.2 },
+        { area: '基隆', x: 82.1, y: 2.9 },
+        { area: '新北', x: 84.0, y: 11.8 },
+        { area: '桃園', x: 59.0, y: 6.5 },
+        { area: '新竹', x: 51.0, y: 15.1 }
+    ],
+    '中部': [
+        { area: '苗栗', x: 40.5, y: 20.9 },
+        { area: '台中', x: 31.8, y: 29.1 },
+        { area: '彰化', x: 20.3, y: 37.0 },
+        { area: '南投', x: 46.2, y: 39.1 },
+        { area: '雲林', x: 12.0, y: 45.9 }
+    ],
+    '南部': [
+        { area: '嘉義', x: 32.5, y: 52.9 },
+        { area: '台南', x: 7.7, y: 61.1 },
+        { area: '高雄', x: 33.1, y: 65.0 },
+        { area: '屏東', x: 36.7, y: 75.5 }
+    ],
+    '東部': [
+        { area: '宜蘭', x: 88.4, y: 20.3 },
+        { area: '花蓮', x: 70.4, y: 39.6 },
+        { area: '台東', x: 51.7, y: 62.4 }
+    ]
+};
+
+/* 更新地圖 Icon */
+function updateMapIcons() {
+    const mapWrapper = document.getElementById('map-wrapper');
+
+    document.querySelectorAll('.map-icon').forEach(icon => {
+        icon.remove();
+    });
+
+    fetch('/104/salary_analysis/api/salary/vacancies/')
+        .then(response => response.json())
+        .then(counts => {
+            Object.values(locations).flat().forEach(loc => {
+                if (counts[loc.area] > 0) {
+                    const icon = document.createElement('div');
+                    icon.className = 'map-icon';
+
+                    /* 位置使用百分比，相對於 map-wrapper */
+                    icon.style.left = loc.x + '%';
+                    icon.style.top = loc.y + '%';
+                    icon.dataset.area = loc.area;
+
+                    const iconInner = document.createElement('i');
+                    iconInner.className = 'bi bi-geo-alt-fill';
+
+                    const badge = document.createElement('span');
+                    badge.className = 'vacancy-badge';
+                    badge.textContent = counts[loc.area];
+
+                    icon.appendChild(iconInner);
+                    icon.appendChild(badge);
+
+                    icon.addEventListener('click', event => {
+                        event.stopPropagation();
+
+                        currentArea = loc.area;
+                        updateChart();
+
+                        document.querySelectorAll('.map-icon').forEach(i => {
+                            i.classList.remove('active');
+                        });
+
+                        icon.classList.add('active');
+                    });
+
+                    mapWrapper.appendChild(icon);
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching vacancy counts:', error);
+        });
+}
+
+/* 更新薪資圖表 */
+function updateChart() {
+    let url = '/104/salary_analysis/api/salary/average/';
+
+    if (currentArea) {
+        url += '?area=' + encodeURIComponent(currentArea);
+    }
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            renderChart(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+/* 建立薪資圖表 */
+function renderChart(data) {
+    const ctx = document.getElementById('salaryChart').getContext('2d');
+
+    const labels = [
+        '前端工程師',
+        '數據分析師',
+        'AI工程師',
+        '網路管理工程師',
+        '雲端工程師'
+    ];
+
+    const averages = labels.map(label => data[label] || 0);
+
+    if (salaryChart) {
+        salaryChart.destroy();
+    }
+
+    salaryChart = new Chart(ctx, {
+        type: 'bar',
+
+        data: {
+            labels: labels,
+
+            datasets: [{
+                label: '平均薪資',
+                data: averages,
+
+                backgroundColor: [
+                    'rgba(109, 111, 94, 0.8)',
+                    'rgba(160, 139, 91, 0.8)',
+                    'rgba(64, 69, 46, 0.8)',
+                    'rgba(143, 163, 130, 0.8)',
+                    'rgba(85, 107, 47, 0.8)'
+                ]
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    display: false
+                },
+
+                title: {
+                    display: true,
+                    text: (currentArea ? currentArea : '全部地區') + ' - 平均薪資',
+
+                    font: {
+                        size: 24,
+                        weight: 'bold'
+                    },
+
+                    color: 'rgb(0, 0, 0)',
+
+                    padding: {
+                        top: 0,
+                        bottom: 30
+                    }
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    suggestedMin: 0,
+                    suggestedMax: 70000,
+                    grace: '5%',
+
+                    title: {
+                        display: true,
+                        text: '薪資',
+
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        },
+
+                        color: 'rgb(0, 0, 0)'
+                    },
+
+                    ticks: {
+                        min: 0,
+                        max: 70000,
+                        stepSize: 10000,
+
+                        callback: function(value) {
+                            if (value === 0) {
+                                return '0';
+                            }
+
+                            return value / 1000 + 'K';
+                        },
+
+                        font: {
+                            weight: 'bold'
+                        },
+
+                        autoSkip: false,
+                        includeBounds: true
+                    }
+                },
+
+                x: {
+                    grid: {
+                        display: false
+                    },
+
+                    title: {
+                        display: true,
+                        text: '職業類別',
+
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        },
+
+                        color: 'rgb(0, 0, 0)'
+                    },
+
+                    ticks: {
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+/* 座標校正功能 */
+function enableCoordinateHelper() {
+    const mapWrapper = document.getElementById('map-wrapper');
+
+    mapWrapper.addEventListener('click', function(event) {
+        const rect = this.getBoundingClientRect();
+
+        const x = ((event.clientX - rect.left) / rect.width) * 100;
+        const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+        console.log(`x: ${x.toFixed(1)}, y: ${y.toFixed(1)}`);
+    });
+}
+
+/* 頁面載入完成 */
+document.addEventListener('DOMContentLoaded', () => {
+    updateMapIcons();
+    updateChart();
+    enableCoordinateHelper();
+
+    document.querySelector('.all-regions-btn').addEventListener('click', () => {
+        currentArea = '';
+        updateChart();
+
+        document.querySelectorAll('.map-icon').forEach(icon => {
+            icon.classList.remove('active');
+        });
+    });
+});
+</script>
+{% endblock %}

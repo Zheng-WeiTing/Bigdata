@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Django
+*.log
+db.sqlite3
+staticfiles_collected/
+
+# PostgreSQL
+postgres_data/
+
+# Environment variables
+.env
+*.env
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Python virtual environments
+venv/
+.venv/
+env/
+
+# Cache
+.pytest_cache/
+.mypy_cache/
+
+# Ollama data
+ollama-data/

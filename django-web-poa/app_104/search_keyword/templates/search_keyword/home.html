@@ -1,0 +1,529 @@
+{% extends '104/base.html' %}
+
+{% block page_title %}關鍵字趨勢{% endblock %}
+
+{% block content %}
+<style>
+/* filter-card：篩選卡片 */
+.filter-card {
+    width: 100%;
+    margin-bottom: 24px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+}
+
+.filter-label {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+/* comparison-chart-card：左側比較圖 */
+.comparison-chart-card {
+    width: 100%;
+    height: 400px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+}
+
+.comparison-chart-card .card-body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* trend-card：右側趨勢圖 */
+.trend-card {
+    width: 100%;
+    min-height: 600px;
+    height: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: rgb(62, 62, 60);
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+}
+
+.trend-card .card-body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* Chart */
+#keywordComparisonChart,
+#keyword_time_line_chart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* 手機只調整元件本身 */
+@media (max-width: 576px) {
+    .filter-card .card-body {
+        padding: 15px;
+    }
+
+    .comparison-chart-card {
+        height: 350px;
+    }
+
+    .trend-card {
+        height: 400px;
+        min-height: 400px;
+    }
+}
+</style>
+
+<!-- keyword-trend-container：整個關鍵字趨勢內容 -->
+<div class="container-fluid px-3 px-md-4 px-xl-5 py-4 py-xl-5">
+
+    <!-- keyword-trend-row：左右主要區塊 -->
+    <div class="row g-4">
+
+        <!-- left-panel：左側 -->
+        <div class="col-12 col-xl-5">
+
+            <!-- filter-card：篩選條件 -->
+            <div class="card filter-card">
+                <div class="card-body">
+
+                    <!-- filter-row：搜尋關鍵詞 -->
+                    <div class="row align-items-start g-2 mb-3">
+                        <div class="col-12 col-sm-4">
+                            <label class="filter-label" for="input_keyword">搜尋關鍵詞</label>
+                        </div>
+
+                        <!-- filter-control：搜尋輸入 -->
+                        <div class="col-12 col-sm-8">
+                            <input id="input_keyword" name="userkey" value="python javascript" class="form-control">
+                            <div class="form-text text-muted">
+                                可搜尋技術、福利等。不分大小寫，多個請空白隔開。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- filter-row：邏輯連接 -->
+                    <div class="row align-items-start g-2 mb-3">
+                        <div class="col-12 col-sm-4">
+                            <label class="filter-label">邏輯連接</label>
+                        </div>
+
+                        <!-- filter-control：and / or -->
+                        <div class="col-12 col-sm-8">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="cond_and" value="and" name="condradio">
+                                <label class="form-check-label" for="cond_and">and</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="cond_or" value="or" name="condradio" checked>
+                                <label class="form-check-label" for="cond_or">or</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- filter-row：職業類別 -->
+                    <div class="row align-items-start g-2 mb-3">
+                        <div class="col-12 col-sm-4">
+                            <label class="filter-label" for="jobCategory">職業類別</label>
+                        </div>
+
+                        <!-- filter-control：職業類別下拉選單 -->
+                        <div class="col-12 col-sm-8">
+                            <select id="jobCategory" name="cateradio" class="form-select">
+                                <option value="全部" selected>全部</option>
+                                <option value="前端工程師">前端工程師</option>
+                                <option value="數據分析師">數據分析師</option>
+                                <option value="AI工程師">AI工程師</option>
+                                <option value="網路管理工程師">網路管理工程師</option>
+                                <option value="雲端工程師">雲端工程師</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- filter-row：最近多少周 -->
+                    <div class="row align-items-start g-2">
+                        <div class="col-12 col-sm-4">
+                            <label class="filter-label" for="weeks">最近多少周?</label>
+                        </div>
+
+                        <!-- filter-control：週數選擇 -->
+                        <div class="col-12 col-sm-8">
+                            <select id="weeks" name="wkradio" class="form-select">
+                                <option value="1">1 周</option>
+                                <option value="2" selected>2 周</option>
+                                <option value="3">3 周</option>
+                                <option value="custom">自訂</option>
+                            </select>
+
+                            <input type="number" id="customWeeks" min="1" max="52" value="2" style="display:none;" class="form-control mt-2">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- comparison-chart-card：職缺數與提及數 -->
+            <div class="card comparison-chart-card">
+                <div class="card-body">
+                    <canvas id="keywordComparisonChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- right-panel：右側 -->
+        <div class="col-12 col-xl-7">
+
+            <!-- trend-card：關鍵字時間趨勢 -->
+            <div class="card trend-card">
+                <div class="card-body">
+                    <canvas id="keyword_time_line_chart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let comparisonChart = null;
+let trendChart = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const inputKeyword = document.getElementById('input_keyword');
+    const jobCategory = document.getElementById('jobCategory');
+    const weeksSelect = document.getElementById('weeks');
+    const customWeeks = document.getElementById('customWeeks');
+    const conditionRadios = document.querySelectorAll('input[name="condradio"]');
+
+    fetchKeywordTrendData();
+
+    inputKeyword.addEventListener('change', fetchKeywordTrendData);
+    jobCategory.addEventListener('change', fetchKeywordTrendData);
+
+    conditionRadios.forEach(radio => {
+        radio.addEventListener('change', fetchKeywordTrendData);
+    });
+
+    weeksSelect.addEventListener('change', function() {
+        if (this.value === 'custom') {
+            customWeeks.style.display = 'block';
+            customWeeks.focus();
+        } else {
+            customWeeks.style.display = 'none';
+        }
+
+        fetchKeywordTrendData();
+    });
+
+    customWeeks.addEventListener('input', function() {
+        let value = parseInt(this.value);
+
+        if (Number.isNaN(value)) {
+            return;
+        }
+
+        if (value < 1) {
+            value = 1;
+        }
+
+        if (value > 52) {
+            value = 52;
+        }
+
+        this.value = value;
+        fetchKeywordTrendData();
+    });
+});
+
+/* 左側：職缺數與提及數 */
+function updateComparisonChart(articleCount, keywordFrequency) {
+    const canvas = document.getElementById('keywordComparisonChart');
+
+    if (!canvas) {
+        return;
+    }
+
+    const ctx = canvas.getContext('2d');
+    const labels = Object.keys(articleCount);
+    const jobCounts = labels.map(label => articleCount[label] || 0);
+    const mentionCounts = labels.map(label => keywordFrequency[label] || 0);
+
+    if (comparisonChart) {
+        comparisonChart.destroy();
+        comparisonChart = null;
+    }
+
+    comparisonChart = new Chart(ctx, {
+        type: 'line',
+
+        data: {
+            labels: labels,
+
+            datasets: [
+                {
+                    label: '職缺數',
+                    data: jobCounts,
+                    borderColor: 'rgb(31, 46, 96)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    fill: false,
+                    tension: 0.3
+                },
+                {
+                    label: '提及數',
+                    data: mentionCounts,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    fill: false,
+                    tension: 0.3
+                }
+            ]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            title: {
+                display: true,
+                text: '職缺數 & 提及數折線比較圖',
+                fontSize: 20,
+                fontColor: '#000',
+                padding: 20
+            },
+
+            legend: {
+                display: true,
+                position: 'right',
+
+                labels: {
+                    boxWidth: 10,
+                    padding: 10
+                }
+            },
+
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        fontStyle: 'bold'
+                    },
+
+                    scaleLabel: {
+                        display: true,
+                        fontStyle: 'bold'
+                    }
+                }],
+
+                xAxes: [{
+                    ticks: {
+                        fontStyle: 'bold'
+                    },
+
+                    scaleLabel: {
+                        display: true,
+                        fontStyle: 'bold'
+                    }
+                }]
+            }
+        }
+    });
+}
+
+/* 右側：時間趨勢 */
+function updateTrendChart(keywordTimeFrequency) {
+    const canvas = document.getElementById('keyword_time_line_chart');
+
+    if (!canvas) {
+        return;
+    }
+
+    const ctx = canvas.getContext('2d');
+
+    if (trendChart) {
+        trendChart.destroy();
+        trendChart = null;
+    }
+
+    trendChart = new Chart(ctx, {
+        type: 'line',
+
+        data: {
+            datasets: [{
+                label: '時間趨勢',
+                data: keywordTimeFrequency,
+                borderColor: 'rgb(255, 255, 255)',
+                backgroundColor: 'rgba(255, 255, 255, 0.47)',
+                borderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                pointBackgroundColor: 'rgb(255, 255, 255)',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                tension: 0.3,
+                fill: true
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            title: {
+                display: true,
+                text: '關鍵字時間趨勢',
+                fontSize: 24,
+                fontColor: '#fff',
+                padding: 20
+            },
+
+            legend: {
+                display: false
+            },
+
+            scales: {
+                xAxes: [{
+                    type: 'time',
+
+                    gridLines: {
+                        color: 'rgba(255, 255, 255, 0.1)',
+                        zeroLineColor: 'rgba(255, 255, 255, 0.2)'
+                    },
+
+                    ticks: {
+                        beginAtZero: true,
+                        fontStyle: 'bold',
+                        fontColor: '#fff'
+                    },
+
+                    time: {
+                        unit: 'day',
+
+                        displayFormats: {
+                            day: 'MM/DD'
+                        }
+                    }
+                }],
+
+                yAxes: [{
+                    gridLines: {
+                        color: 'rgba(255, 255, 255, 0.1)',
+                        zeroLineColor: 'rgba(255, 255, 255, 0.2)'
+                    },
+
+                    ticks: {
+                        beginAtZero: true,
+                        fontStyle: 'bold',
+                        fontColor: '#fff'
+                    },
+
+                    display: true,
+
+                    scaleLabel: {
+                        display: true
+                    }
+                }]
+            }
+        }
+    });
+}
+
+/* 取得週數 */
+function getSelectedWeeks() {
+    const weeksSelect = document.getElementById('weeks');
+    const customWeeks = document.getElementById('customWeeks');
+
+    if (weeksSelect.value === 'custom') {
+        let value = parseInt(customWeeks.value);
+
+        if (Number.isNaN(value)) {
+            return 2;
+        }
+
+        if (value < 1) {
+            value = 1;
+        }
+
+        if (value > 52) {
+            value = 52;
+        }
+
+        return value;
+    }
+
+    return parseInt(weeksSelect.value);
+}
+
+/* 取得關鍵字 */
+function getSearchKeywords() {
+    const input = document.getElementById('input_keyword');
+
+    return input.value
+        .trim()
+        .split(/\s+/)
+        .filter(word => word !== '')
+        .map(word => word.toLowerCase())
+        .join(' ');
+}
+
+/* 呼叫 Django API */
+function fetchKeywordTrendData() {
+    const userkey = getSearchKeywords();
+    const cate = document.getElementById('jobCategory').value;
+    const weeks = getSelectedWeeks();
+    const selectedCondition = document.querySelector('input[name="condradio"]:checked');
+    const cond = selectedCondition ? selectedCondition.value : 'or';
+
+    if (userkey.length < 2) {
+        alert('輸入關鍵字不可空白或小於兩個中文字!');
+        return;
+    }
+
+    const apiUrl =
+        `/104/search_keyword/api_get_top_userkey/` +
+        `?userkey=${encodeURIComponent(userkey)}` +
+        `&cate=${encodeURIComponent(cate)}` +
+        `&weeks=${weeks}` +
+        `&cond=${cond}`;
+
+    fetch(apiUrl)
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.error || '取得關鍵字趨勢資料失敗');
+                });
+            }
+
+            return response.json();
+        })
+        .then(received => {
+            if (received.error) {
+                throw new Error(received.error);
+            }
+
+            const articleCount = received.key_occurrence_cat;
+            const keywordFrequency = received.key_freq_cat;
+            const keywordTimeFrequency = received.key_time_freq;
+
+            updateComparisonChart(articleCount, keywordFrequency);
+            updateTrendChart(keywordTimeFrequency);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(`載入失敗：${error.message}`);
+        });
+}
+</script>
+{% endblock %}

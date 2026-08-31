@@ -1,0 +1,526 @@
+{% extends '104/base.html' %}
+{% block page_title %}擅長工具分析{% endblock %}
+
+{% block extra_css %}
+<style>
+/* select-box-top：篩選條件卡片 */
+.select-box-top {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(64, 73, 118, 0.1);
+}
+
+.filter-row label {
+    color: #000;
+    font-weight: 500;
+    margin: 0;
+    white-space: nowrap;
+}
+
+/* 下拉選單 */
+.form-select {
+    width: 100%;
+    height: 40px;
+    padding: 0 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    border: 1px solid #404976;
+    color: #404976;
+}
+
+/* 自訂字詞數量 */
+#customWordCount {
+    width: 80px;
+    flex-shrink: 0;
+    height: 40px;
+    padding: 0 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    border: 1px solid #404976;
+    color: #404976;
+}
+
+/* wordCloud-container：文字雲 */
+#wordCloud-container {
+    width: 100%;
+    height: 550px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(64, 73, 118, 0.1);
+}
+
+#wordCloud {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 50px);
+}
+
+/* bubbleChart-container：泡泡圖 */
+#bubbleChart-container {
+    width: 100%;
+    height: 700px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(64, 73, 118, 0.1);
+}
+
+#bubbleChart {
+    width: 100%;
+    height: calc(100% - 50px);
+}
+
+#bubbleChart svg {
+    display: block;
+    max-width: 100%;
+}
+
+.chart-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 20px;
+}
+
+.legend {
+    font-family: sans-serif;
+    font-size: 12px;
+}
+
+.legend rect {
+    stroke-width: 1;
+    stroke: #ccc;
+}
+
+.word-cloud-tooltip {
+    position: absolute;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* 手機只調整元件本身 */
+@media (max-width: 576px) {
+    .select-box-top {
+        padding: 15px;
+    }
+
+    #wordCloud-container {
+        height: 420px;
+        padding: 15px;
+    }
+
+    #bubbleChart-container {
+        height: 500px;
+        padding: 15px;
+    }
+
+    .chart-title {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- tool-layout：整個擅長工具分析內容 -->
+<div class="container-fluid px-3 px-md-4 px-xl-5 py-4 py-xl-5">
+
+    <!-- grid-layout-3col：左右主要版面 -->
+    <div class="row g-4">
+
+        <!-- left-panel：左側區塊 -->
+        <div class="col-12 col-xl-4">
+
+            <!-- select-box-top：篩選條件 -->
+            <div class="select-box-top mb-4">
+
+                <!-- top-filters：篩選條件 -->
+                <div class="row g-3">
+
+                    <!-- filter-row：職業類別 -->
+                    <div class="col-12">
+                        <div class="row align-items-center g-2">
+                            <div class="col-12 col-sm-4">
+                                <label for="jobType">職業類別：</label>
+                            </div>
+
+                            <div class="col-12 col-sm-8">
+                                <select id="jobType" class="form-select">
+                                    <option value="全部">全部</option>
+                                    <option value="前端工程師">前端工程師</option>
+                                    <option value="數據分析師">數據分析師</option>
+                                    <option value="AI工程師">AI工程師</option>
+                                    <option value="網路管理工程師">網路管理工程師</option>
+                                    <option value="雲端工程師">雲端工程師</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- filter-row：字詞數量 -->
+                    <div class="col-12">
+                        <div class="row align-items-center g-2">
+                            <div class="col-12 col-sm-4">
+                                <label for="wordCount">字詞數量：</label>
+                            </div>
+
+                            <!-- word-count-controls：字詞數量控制 -->
+                            <div class="col-12 col-sm-8">
+                                <div class="d-flex gap-2">
+                                    <select id="wordCount" class="form-select flex-grow-1">
+                                        <option value="10">前 10 筆</option>
+                                        <option value="30" selected>前 30 筆</option>
+                                        <option value="50">前 50 筆</option>
+                                        <option value="custom">自訂</option>
+                                    </select>
+
+                                    <input
+                                        type="number"
+                                        id="customWordCount"
+                                        min="1"
+                                        max="100"
+                                        value="50"
+                                        style="display:none;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- wordCloud-container：文字雲 -->
+            <div id="wordCloud-container">
+                <div class="chart-title">文字雲</div>
+                <div id="wordCloud"></div>
+            </div>
+
+        </div>
+
+        <!-- select-box-right：右側泡泡圖 -->
+        <div class="col-12 col-xl-8">
+
+            <!-- bubbleChart-container：泡泡圖 -->
+            <div id="bubbleChart-container">
+                <div class="chart-title">泡泡圖</div>
+                <div id="bubbleChart"></div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/wordcloud@1.1.2/src/wordcloud2.min.js"></script>
+
+<script>
+let currentWordCloudData = [];
+let currentBubbleData = [];
+let resizeTimer = null;
+
+/* 建立文字雲 */
+function createWordCloud(data) {
+    let wordCount = 30;
+    const wordCountSelect = document.getElementById('wordCount');
+
+    if (wordCountSelect.value === 'custom') {
+        const customCount = parseInt(document.getElementById('customWordCount').value);
+
+        if (!isNaN(customCount) && customCount > 0 && customCount <= 100) {
+            wordCount = customCount;
+        }
+    } else {
+        wordCount = parseInt(wordCountSelect.value || 30);
+    }
+
+    wordCount = Math.max(1, Math.min(wordCount, 100));
+
+    const sortedData = [...data]
+        .sort((a, b) => b.value - a.value)
+        .slice(0, wordCount);
+
+    const container = document.getElementById('wordCloud');
+    container.innerHTML = '';
+
+    if (sortedData.length === 0) {
+        return;
+    }
+
+    const maxValue = Math.max(...sortedData.map(item => item.value));
+    const minValue = Math.min(...sortedData.map(item => item.value));
+    const wordList = sortedData.map(item => [item.text, item.value]);
+
+    const colors = [
+        '#404976',
+        '#722F37',
+        '#8B4B50',
+        '#3E735D',
+        '#8B7E3D'
+    ];
+
+    let tooltip = document.querySelector('.word-cloud-tooltip');
+
+    if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.className = 'word-cloud-tooltip';
+        tooltip.style.display = 'none';
+        document.body.appendChild(tooltip);
+    }
+
+    WordCloud(container, {
+        list: wordList,
+
+        color: function() {
+            return colors[Math.floor(Math.random() * colors.length)];
+        },
+
+        backgroundColor: 'transparent',
+
+        weightFactor: function(size) {
+            const containerWidth = container.clientWidth;
+            const minSize = containerWidth <= 500 ? 11 : 16;
+            const maxSize = containerWidth <= 500 ? 32 : 50;
+
+            if (maxValue === minValue) {
+                return containerWidth <= 500 ? 20 : 30;
+            }
+
+            return minSize +
+                ((size - minValue) / (maxValue - minValue)) *
+                (maxSize - minSize);
+        },
+
+        fontFamily: 'Arial, "Microsoft YaHei"',
+        rotateRatio: 0.6,
+        rotationSteps: 4,
+        minSize: 10,
+        drawOutOfBound: false,
+        shrinkToFit: true,
+        gridSize: container.clientWidth <= 500 ? 5 : 8,
+        shape: 'circle',
+
+        hover: function(item, dimension, event) {
+            if (item && event) {
+                tooltip.style.display = 'block';
+                tooltip.style.left = (event.pageX + 10) + 'px';
+                tooltip.style.top = (event.pageY - 28) + 'px';
+                tooltip.textContent = `${item[0]}: ${item[1]}次`;
+            } else {
+                tooltip.style.display = 'none';
+            }
+        }
+    });
+}
+
+/* 建立泡泡圖 */
+function createBubbleChart(data) {
+    d3.select('#bubbleChart').select('svg').remove();
+
+    const container = document.getElementById('bubbleChart');
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    if (width <= 0 || height <= 0) {
+        return;
+    }
+
+    const svg = d3.select('#bubbleChart')
+        .append('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('viewBox', `0 0 ${width} ${height}`)
+        .attr('preserveAspectRatio', 'xMidYMid meet');
+
+    const groupedData = d3.group(data, d => d.group);
+    const limitedData = [];
+
+    groupedData.forEach(values => {
+        const sortedValues = [...values]
+            .sort((a, b) => b.value - a.value)
+            .slice(0, 30);
+
+        limitedData.push(...sortedValues);
+    });
+
+    if (limitedData.length === 0) {
+        return;
+    }
+
+    const chartWidth = Math.max(width - 20, 100);
+    const chartHeight = Math.max(height - 20, 100);
+
+    const pack = d3.pack()
+        .size([chartWidth, chartHeight])
+        .padding(2);
+
+    const root = d3.hierarchy({
+        children: limitedData
+    }).sum(d => d.value);
+
+    const nodes = pack(root).leaves();
+    const groups = d3.group(limitedData, d => d.group);
+    const colorScales = new Map();
+
+    groups.forEach((values, group) => {
+        const maxVal = d3.max(values, d => d.value);
+        const baseColor = values[0].color;
+
+        colorScales.set(
+            group,
+            d3.scaleLinear()
+                .domain([0, maxVal])
+                .range([
+                    d3.color(baseColor).brighter(2).formatHex(),
+                    d3.color(baseColor).darker(2).formatHex()
+                ])
+        );
+    });
+
+    const node = svg.selectAll('.node')
+        .data(nodes)
+        .enter()
+        .append('g')
+        .attr('class', 'node')
+        .attr('transform', d => `translate(${d.x + 10},${d.y + 10})`);
+
+    node.append('circle')
+        .attr('r', d => Math.max(d.r, 0))
+        .style('fill', d => colorScales.get(d.data.group)(d.data.value))
+        .style('opacity', 0.7);
+
+    node.append('text')
+        .attr('dy', '.3em')
+        .style('text-anchor', 'middle')
+        .style('font-size', d => `${Math.min(Math.max(d.r / 3, 7), 14)}px`)
+        .style('pointer-events', 'none')
+        .style('fill', '#000')
+        .text(d => d.r >= 14 ? d.data.name : '');
+
+    /* 圖例 */
+    const legendData = Array.from(groups.keys());
+    const legendWidth = window.innerWidth <= 576 ? 100 : 130;
+    const legendX = Math.max(width - legendWidth, 5);
+    const legendY = Math.max(height - (legendData.length * 25) - 10, 5);
+
+    const legend = svg.append('g')
+        .attr('class', 'legend')
+        .attr('transform', `translate(${legendX},${legendY})`);
+
+    legendData.forEach((group, i) => {
+        const baseColor = groups.get(group)[0].color;
+
+        const g = legend.append('g')
+            .attr('transform', `translate(0,${i * 25})`);
+
+        g.append('rect')
+            .attr('width', 16)
+            .attr('height', 16)
+            .attr('fill', baseColor)
+            .attr('rx', 3)
+            .style('opacity', 0.9);
+
+        g.append('text')
+            .attr('x', 22)
+            .attr('y', 13)
+            .text(group)
+            .style('font-size', window.innerWidth <= 576 ? '10px' : '12px')
+            .style('font-weight', '500');
+    });
+}
+
+/* 更新文字雲 */
+function updateWordCloud() {
+    const jobType = document.getElementById('jobType').value;
+
+    fetch(`/104/tool_analysis/get_wordcloud_data/${encodeURIComponent(jobType)}/`)
+        .then(response => response.json())
+        .then(data => {
+            currentWordCloudData = data;
+            createWordCloud(data);
+        })
+        .catch(error => {
+            console.error('文字雲資料載入失敗：', error);
+        });
+}
+
+/* 更新泡泡圖 */
+function updateBubbleChart() {
+    fetch('/104/tool_analysis/get_bubble_data/')
+        .then(response => response.json())
+        .then(data => {
+            currentBubbleData = data;
+            createBubbleChart(data);
+        })
+        .catch(error => {
+            console.error('泡泡圖資料載入失敗：', error);
+        });
+}
+
+/* 頁面初始化 */
+document.addEventListener('DOMContentLoaded', function() {
+    const wordCountSelect = document.getElementById('wordCount');
+    const customWordCount = document.getElementById('customWordCount');
+    const jobTypeSelect = document.getElementById('jobType');
+
+    updateWordCloud();
+    updateBubbleChart();
+
+    jobTypeSelect.addEventListener('change', updateWordCloud);
+
+    wordCountSelect.addEventListener('change', function() {
+        if (this.value === 'custom') {
+            customWordCount.style.display = 'block';
+            customWordCount.focus();
+        } else {
+            customWordCount.style.display = 'none';
+
+            if (currentWordCloudData.length > 0) {
+                createWordCloud(currentWordCloudData);
+            }
+        }
+    });
+
+    customWordCount.addEventListener('change', function() {
+        let value = parseInt(this.value);
+
+        if (isNaN(value)) {
+            value = 30;
+        }
+
+        value = Math.max(1, Math.min(value, 100));
+        this.value = value;
+
+        if (currentWordCloudData.length > 0) {
+            createWordCloud(currentWordCloudData);
+        }
+    });
+
+    /* 螢幕大小改變後重新繪圖 */
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+
+        resizeTimer = setTimeout(function() {
+            if (currentWordCloudData.length > 0) {
+                createWordCloud(currentWordCloudData);
+            }
+
+            if (currentBubbleData.length > 0) {
+                createBubbleChart(currentBubbleData);
+            }
+        }, 200);
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,644 @@
+{% extends '104/base.html' %}
+{% load static %}
+
+{% block page_title %}職缺詳情{% endblock %}
+
+{% block extra_css %}
+<style>
+/* 主內容外觀 */
+.main-content {
+    background-color: #ffffff;
+}
+
+/* 職業類別 */
+.job-category-wrapper {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 1rem;
+}
+
+.form-label {
+    color: rgb(3, 58, 13);
+    white-space: nowrap;
+}
+
+.form-select {
+    flex: 1;
+    min-width: 0;
+    max-width: none;
+    border: none;
+    background-color: rgb(139, 125, 70);
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-select:focus {
+    box-shadow: none;
+    border: none;
+}
+
+/* 地圖 */
+#mapContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* 圖片與 Icon 的共同座標系統 */
+#taiwan-map-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+#taiwan-map-wrapper img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* 地圖 Icon */
+.map-icon {
+    position: absolute;
+    font-size: 24px;
+    line-height: 1;
+    color: rgb(102, 5, 5);
+    cursor: pointer;
+    display: none;
+    transform: translate(-50%, -100%);
+    transform-origin: 50% 100%;
+    transition: transform 0.3s ease, color 0.3s ease;
+    z-index: 5;
+}
+
+.map-icon:hover,
+.map-icon.active {
+    color: rgb(47, 53, 114);
+    transform: translate(-50%, -100%) scale(1.2);
+}
+
+/* Icon 上方數字 */
+.count-badge {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgb(102, 5, 5);
+    color: #ffffff;
+    font-size: 10px;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.map-icon:hover .count-badge,
+.map-icon.active .count-badge {
+    background: rgb(47, 53, 114);
+}
+
+/* 右側職缺卡片 */
+.job-details-card {
+    height: 720px;
+    background-color: rgb(239, 233, 215);
+}
+
+/* Accordion */
+.accordion-item {
+    background-color: white;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    border: 1px solid #dcc0aa;
+}
+
+.accordion-button.job-button {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: white;
+    color: #6d6f5e;
+    transition: all 0.3s ease;
+}
+
+.accordion-button.job-button:not(.collapsed),
+.accordion-button.job-button:hover,
+.accordion-button.job-button:focus {
+    background-color: #404976;
+    color: #ffe9d7;
+    box-shadow: none;
+}
+
+.accordion-body {
+    background-color: #ffffff;
+    padding: 15px;
+}
+
+.accordion-body > div {
+    background-color: #f6f6f6;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    border-left: 3px solid #6d6f5e;
+}
+
+/* 職缺標題 */
+.job-title-wrapper {
+    flex: 1;
+    min-width: 0;
+    max-width: 700px;
+    display: flex;
+    align-items: center;
+}
+
+.job-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    width: 100%;
+}
+
+.card-title {
+    color: #6d6f5e;
+    font-size: 1.75rem;
+    margin-top: 20px;
+}
+
+.card-title strong {
+    color: #404976;
+}
+
+/* 按鈕 */
+.btn-primary,
+.btn-secondary {
+    background-color: #6d6f5e;
+    border-color: #6d6f5e;
+    color: #ffe9d7;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover {
+    background-color: #404976;
+    border-color: #404976;
+}
+
+/* 職缺列表 */
+#jobList {
+    max-height: calc(100% - 80px);
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+#jobList::-webkit-scrollbar {
+    width: 6px;
+}
+
+#jobList::-webkit-scrollbar-track {
+    background: #ededeb;
+    border-radius: 3px;
+}
+
+#jobList::-webkit-scrollbar-thumb {
+    background: #6d6f5e;
+    border-radius: 3px;
+}
+
+#jobList::-webkit-scrollbar-thumb:hover {
+    background: #404976;
+}
+
+/* 分頁 */
+#pagination {
+    margin-top: 10px;
+}
+
+#pagination .btn-outline-secondary {
+    color: #6d6f5e;
+    border-color: #6d6f5e;
+}
+
+#pagination .btn-outline-secondary:hover {
+    background-color: #404976;
+    border-color: #404976;
+    color: #ffe9d7;
+}
+
+#pagination span.btn {
+    min-width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    color: #6d6f5e;
+}
+
+/* 手機只調整元件本身 */
+@media (max-width: 576px) {
+    .job-category-wrapper {
+        max-width: 320px;
+    }
+
+    #taiwan-map-wrapper {
+        max-width: 320px;
+    }
+
+    .map-icon {
+        font-size: 20px;
+    }
+
+    .count-badge {
+        width: 17px;
+        height: 17px;
+        top: -12px;
+        font-size: 8px;
+    }
+
+    .job-details-card {
+        height: 650px;
+    }
+
+    .card-title {
+        font-size: 1.3rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- main-content：主內容區域 -->
+<div class="container-fluid main-content px-3 px-md-4 px-xl-5 py-4 py-xl-5">
+
+    <!-- content-layout：左右主要區塊 -->
+    <div class="row g-4 g-xl-5">
+
+        <!-- left-section：左側區塊 -->
+        <div class="col-12 col-xl-4">
+
+            <!-- job-category：職業類別 -->
+            <div class="job-category-wrapper">
+                <div class="d-flex align-items-center gap-2">
+                    <label for="jobTypeSelect" class="form-label mb-0">
+                        <strong>職業類別：</strong>
+                    </label>
+
+                    <select id="jobTypeSelect" class="form-select">
+                        <option value="全部">全部</option>
+                        <option value="前端工程師">前端工程師</option>
+                        <option value="數據分析師">數據分析師</option>
+                        <option value="AI工程師">AI工程師</option>
+                        <option value="網路管理工程師">網路管理工程師</option>
+                        <option value="雲端工程師">雲端工程師</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- map-wrapper：地圖區域 -->
+            <div class="w-100">
+
+                <!-- mapContainer：地圖置中區域 -->
+                <div id="mapContainer">
+
+                    <!-- taiwan-map-wrapper：圖片與所有 Icon 的共同座標系統 -->
+                    <div id="taiwan-map-wrapper">
+                        <img src="{% static 'area_analysis/images/Taiwan1.png' %}" alt="台灣地圖">
+                    </div>
+
+                </div>
+
+                <!-- all-area-button：全部地區按鈕 -->
+                <div class="text-center mt-3">
+                    <button class="btn btn-secondary" onclick="fetchJobs()">全部地區</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- right-section：右側區塊 -->
+        <div class="col-12 col-xl-8">
+
+            <!-- job-details-card：職缺詳情卡片 -->
+            <div class="card job-details-card">
+                <div class="card-body">
+
+                    <h5 class="card-title">職缺詳情</h5>
+
+                    <!-- jobList：職缺 Accordion -->
+                    <div id="jobList" class="accordion"></div>
+
+                    <!-- pagination：分頁 -->
+                    <div id="pagination" class="mt-3 d-flex justify-content-center align-items-center gap-3"></div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentArea = '全部';
+
+/* 縣市座標 */
+const locations = {
+    '北部': [
+        { area: '台北', x: 73.4, y: 5.1 },
+        { area: '基隆', x: 80.1, y: 3.3 },
+        { area: '新北', x: 69.1, y: 11.7 },
+        { area: '桃園', x: 59.4, y: 7.6 },
+        { area: '新竹', x: 51.0, y: 15.1 }
+    ],
+    '中部': [
+        { area: '苗栗', x: 40.5, y: 20.9 },
+        { area: '台中', x: 31.8, y: 29.1 },
+        { area: '彰化', x: 20.3, y: 37.0 },
+        { area: '南投', x: 46.2, y: 39.1 },
+        { area: '雲林', x: 12.0, y: 45.9 }
+    ],
+    '南部': [
+        { area: '嘉義', x: 32.5, y: 52.9 },
+        { area: '台南', x: 7.7, y: 61.1 },
+        { area: '高雄', x: 33.1, y: 65.0 },
+        { area: '屏東', x: 36.7, y: 75.5 }
+    ],
+    '東部': [
+        { area: '宜蘭', x: 88.4, y: 20.3 },
+        { area: '花蓮', x: 70.4, y: 39.6 },
+        { area: '台東', x: 51.7, y: 62.4 }
+    ]
+};
+
+/* 建立地圖 Icon */
+function createMapIcons() {
+    const mapWrapper = document.getElementById('taiwan-map-wrapper');
+    mapWrapper.querySelectorAll('.map-icon').forEach(icon => icon.remove());
+
+    Object.values(locations).flat().forEach(loc => {
+        const icon = document.createElement('div');
+        icon.className = 'map-icon';
+        icon.style.left = loc.x + '%';
+        icon.style.top = loc.y + '%';
+        icon.dataset.area = loc.area;
+
+        const iconInner = document.createElement('i');
+        iconInner.className = 'bi bi-geo-alt-fill';
+        icon.appendChild(iconInner);
+
+        icon.addEventListener('click', event => {
+            event.stopPropagation();
+            filterByArea(loc.area);
+        });
+
+        mapWrapper.appendChild(icon);
+    });
+}
+
+/* 更新地圖 Icon */
+function updateMapIcons(areaCounts) {
+    document.querySelectorAll('.map-icon').forEach(icon => {
+        icon.style.display = 'none';
+
+        const oldBadge = icon.querySelector('.count-badge');
+        if (oldBadge) oldBadge.remove();
+    });
+
+    Object.entries(areaCounts).forEach(([area, count]) => {
+        const areaName = area
+            .replace('台灣', '')
+            .replace('臺灣', '')
+            .replace(/[市縣]$/, '');
+
+        const icon = document.querySelector(`.map-icon[data-area="${areaName}"]`);
+
+        if (icon && count > 0) {
+            icon.style.display = 'block';
+
+            const badge = document.createElement('span');
+            badge.className = 'count-badge';
+            badge.textContent = count;
+            icon.appendChild(badge);
+        }
+    });
+}
+
+/* 點擊縣市 */
+function filterByArea(area) {
+    document.querySelectorAll('.map-icon').forEach(icon => icon.classList.remove('active'));
+
+    const selectedIcon = document.querySelector(`.map-icon[data-area="${area}"]`);
+    if (selectedIcon) selectedIcon.classList.add('active');
+
+    currentArea = area;
+
+    const jobType = document.getElementById('jobTypeSelect').value;
+    const jobList = document.getElementById('jobList');
+
+    jobList.innerHTML = '<div class="loading">載入中...</div>';
+
+    fetch(`/104/area_analysis/get_jobs/?job_type=${encodeURIComponent(jobType)}&area=${encodeURIComponent(area)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) throw new Error(data.error);
+            renderJobs(data.jobs);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            jobList.innerHTML = `
+                <div class="alert alert-danger">
+                    載入失敗：${error.message}
+                </div>
+            `;
+        });
+}
+
+/* 取得全部職缺 */
+function fetchJobs() {
+    document.querySelectorAll('.map-icon').forEach(icon => icon.classList.remove('active'));
+
+    currentArea = '全部';
+
+    const jobType = document.getElementById('jobTypeSelect').value;
+    const jobList = document.getElementById('jobList');
+
+    jobList.innerHTML = '<div class="loading">載入中...</div>';
+
+    fetch(`/104/area_analysis/get_jobs/?job_type=${encodeURIComponent(jobType)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) throw new Error(data.error);
+
+            renderJobs(data.jobs);
+            updateMapIcons(data.area_counts);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            jobList.innerHTML = `
+                <div class="alert alert-danger">
+                    載入失敗：${error.message}
+                </div>
+            `;
+        });
+}
+
+/* 顯示職缺 */
+function renderJobs(jobs) {
+    const jobList = document.getElementById('jobList');
+    const pagination = document.getElementById('pagination');
+    const itemsPerPage = 10;
+    let currentPage = 1;
+
+    const jobType = document.getElementById('jobTypeSelect').value;
+    const total = jobs.length;
+    const title = document.querySelector('.card-title');
+
+    let displayText = '';
+
+    if (jobType === '全部' && currentArea === '全部') {
+        displayText = `所有職缺詳情（總共 ${total} 筆）`;
+    } else if (jobType === '全部') {
+        displayText = `所有『<strong>${currentArea}</strong>』地區職缺詳情（總共 ${total} 筆）`;
+    } else if (currentArea === '全部') {
+        displayText = `<strong>${jobType}</strong>職缺詳情（總共 ${total} 筆）`;
+    } else {
+        displayText = `<strong>${jobType}『${currentArea}』地區</strong>職缺詳情（總共 ${total} 筆）`;
+    }
+
+    title.innerHTML = displayText;
+
+    /* 顯示一頁 */
+    function renderPage(page) {
+        jobList.innerHTML = '';
+
+        const start = (page - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const currentJobs = jobs.slice(start, end);
+
+        if (currentJobs.length === 0) {
+            jobList.innerHTML = '<div class="alert alert-info">沒有找到相關職缺</div>';
+            pagination.innerHTML = '';
+            return;
+        }
+
+        currentJobs.forEach(job => {
+            const id = 'job-' + Math.random().toString(36).substring(2, 10);
+
+            jobList.innerHTML += `
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading-${id}">
+                        <button class="accordion-button collapsed job-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${id}" aria-expanded="false" aria-controls="collapse-${id}">
+                            <div class="job-title-wrapper">
+                                <span class="job-title" title="${job.header}">
+                                    ${job.header}
+                                </span>
+                            </div>
+                        </button>
+                    </h2>
+
+                    <div id="collapse-${id}" class="accordion-collapse collapse" aria-labelledby="heading-${id}" data-bs-parent="#jobList">
+                        <div class="accordion-body">
+                            <div><strong>職業類別：</strong>${job.jobType}</div>
+                            <div><strong>工作內容：</strong>${job.jobDetail}</div>
+                            <div><strong>擅長工具：</strong>${job.tool}</div>
+                            <div><strong>學歷要求：</strong>${job.edu}</div>
+                            <div><strong>工作經驗：</strong>${job.workExp}</div>
+                            <div><strong>薪資待遇：</strong>${job.salary}</div>
+                            <div><strong>福利制度：</strong>${job.welfare}</div>
+                            <div><strong>工作地點：</strong>${job.area}</div>
+                            <div><strong>更新時間：</strong>${job.date}</div>
+
+                            <div class="text-end">
+                                <a href="${job.link}" class="btn btn-primary btn-sm" target="_blank">
+                                    查看職缺
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    /* 分頁 */
+    function renderPagination() {
+        pagination.innerHTML = '';
+
+        const pageCount = Math.ceil(jobs.length / itemsPerPage);
+        if (pageCount <= 1) return;
+
+        const prev = document.createElement('span');
+        prev.innerHTML = '&larr;';
+        prev.className = 'btn btn-sm btn-outline-secondary';
+        prev.style.cursor = currentPage > 1 ? 'pointer' : 'not-allowed';
+
+        prev.onclick = () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage(currentPage);
+                renderPagination();
+            }
+        };
+
+        const info = document.createElement('span');
+        info.textContent = `第 ${currentPage} / ${pageCount} 頁`;
+
+        const next = document.createElement('span');
+        next.innerHTML = '&rarr;';
+        next.className = 'btn btn-sm btn-outline-secondary';
+        next.style.cursor = currentPage < pageCount ? 'pointer' : 'not-allowed';
+
+        next.onclick = () => {
+            if (currentPage < pageCount) {
+                currentPage++;
+                renderPage(currentPage);
+                renderPagination();
+            }
+        };
+
+        pagination.appendChild(prev);
+        pagination.appendChild(info);
+        pagination.appendChild(next);
+    }
+
+    renderPage(currentPage);
+    renderPagination();
+}
+
+/* 座標校正工具 */
+function enableCoordinateHelper() {
+    const mapWrapper = document.getElementById('taiwan-map-wrapper');
+
+    mapWrapper.addEventListener('click', function(event) {
+        const rect = this.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width) * 100;
+        const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+        console.log(`x: ${x.toFixed(1)}, y: ${y.toFixed(1)}`);
+    });
+}
+
+/* 頁面載入 */
+document.addEventListener('DOMContentLoaded', () => {
+    createMapIcons();
+    enableCoordinateHelper();
+    document.getElementById('jobTypeSelect').addEventListener('change', fetchJobs);
+    fetchJobs();
+});
+</script>
+{% endblock %}

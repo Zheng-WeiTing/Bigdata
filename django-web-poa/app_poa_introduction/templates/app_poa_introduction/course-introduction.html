@@ -1,0 +1,3957 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <title>作品集網頁介紹</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    /* =====================
+   全域設定
+===================== */
+    body {
+      background-color: #F3EDE6;
+      font-family: 'Noto Sans TC', sans-serif;
+      color: #3B4C5E;
+    }
+
+    /* =====================
+   標題與主體框架
+===================== */
+    .page-title {
+      font-size: 2.2rem;
+      color: #3B4C5E;
+      text-align: center;
+    }
+
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 40px;
+      position: relative;
+      padding: 0 20px;
+    }
+
+    .content-container {
+      width: 90%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .main-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .project-description {
+      text-align: center;
+      color: #6C6F70;
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+    }
+
+    .page-section {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(187, 173, 163, 0.1);
+      margin-bottom: 40px;
+      border-left: 5px solid #B6A19A;
+    }
+
+    .page-section h2 {
+      color: #3B4C5E;
+      border-bottom: 2px solid #CFCAC8;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+    }
+
+    /* =====================
+   按鈕樣式
+===================== */
+    .btn-primary {
+      background-color: #3B4C5E;
+      border: none;
+      color: white;
+      padding: 10px 25px;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #2f3d4b;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(59, 76, 94, 0.3);
+    }
+
+    .btn-outline-dark {
+      border-color: #B6A19A;
+      color: #3B4C5E;
+    }
+
+    .btn-outline-dark:hover {
+      background-color: #B6A19A;
+      color: white;
+    }
+
+    .btn-lg {
+      padding: 12px 30px;
+      font-size: 1.1rem;
+    }
+
+    /* =====================
+   Tab 樣式
+===================== */
+    .nav-tabs {
+      justify-content: center;
+      border-bottom: none;
+      margin-bottom: 40px;
+    }
+
+    .nav-tabs .nav-link {
+      border: none;
+      color: #6C6F70;
+      font-size: 1.2rem;
+      padding: 15px 30px;
+      margin: 0 10px;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-tabs .nav-link.active {
+      color: white;
+      background: #3B4C5E;
+    }
+
+    .nav-tabs .nav-link:hover {
+      background: #E6DFD9;
+    }
+
+    .btn-group {
+      position: absolute;
+      right: 0;
+    }
+
+    .btn-group .btn {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 30px;
+      margin: 0 5px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-group .btn.active {
+      background-color: #3B4C5E;
+      color: white;
+    }
+
+    .btn-group .btn:not(.active) {
+      background-color: #EFE9E3;
+      color: #3B4C5E;
+      border-color: #D6C3BF;
+    }
+
+    /* =====================
+   區塊樣式
+===================== */
+    .highlight-box {
+      background: linear-gradient(145deg, #F3EDE6, #B6A19A);
+      border-left: 4px solid #B6A19A;
+    }
+
+    .tech-tags {
+      margin-top: 15px;
+    }
+
+    .tech-tag {
+      background: #3B4C5E;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      margin-right: 8px;
+    }
+
+    .feature-box {
+      background-color: #F8F5F2;
+      padding: 20px;
+      border-radius: 10px;
+      transition: 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .feature-box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 15px rgba(187, 173, 163, 0.15);
+    }
+
+    .feature-list {
+      list-style: none;
+      padding-left: 25px;
+      position: relative;
+    }
+
+    .feature-list li {
+      position: relative;
+      margin-bottom: 10px;
+      padding-left: 10px;
+    }
+
+    .feature-list li::before {
+      content: "\25B8";
+      color: #3B4C5E;
+      position: absolute;
+      left: -15px;
+    }
+
+    /* 應用場景樣式 */
+    .application-scenarios {
+      margin-top: 40px;
+      margin-bottom: 50px;
+      /* 增加下方間距 */
+    }
+
+    .application-scenarios h4 {
+      margin-bottom: 30px;
+      /* 增加標題下方間距 */
+      text-align: center;
+    }
+
+    .application-scenarios .row {
+      margin-bottom: 40px;
+      /* 增加卡片區域下方間距 */
+    }
+
+    /* 確保按鈕區域有適當間距 */
+    .text-center.mt-4 {
+      margin-top: 3rem !important;
+      /* 增加上方間距 */
+      padding-bottom: 20px;
+      /* 增加下方間距 */
+    }
+
+    .scenario-card {
+      text-align: center;
+      padding: 20px;
+      background: #FDFBFA;
+      border: 1px solid #DDD3CE;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .scenario-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .scenario-card i {
+      font-size: 2rem;
+      color: #3B4C5E;
+      margin-bottom: 15px;
+    }
+
+    /* =====================
+   輪播樣式
+===================== */
+
+    .carousel-item {
+      padding-bottom: 100px;
+    }
+
+    .carousel-item img {
+      border-radius: 8px;
+      max-height: 320px;
+      object-fit: contain;
+      margin: 0 auto;
+      display: block;
+      height: 300px;
+      width: auto;
+      max-width: 100%;
+    }
+
+    .carousel-caption {
+      position: absolute;
+      bottom: -20px;
+      left: 0;
+      right: 0;
+      background: rgba(59, 76, 94, 0.7);
+      padding: 10px;
+      border-radius: 0 0 8px 8px;
+      font-size: 0.95rem;
+      color: white;
+      height: 90px;
+      margin-bottom: 20px;
+    }
+
+    .carousel-inner {
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .carousel-indicators {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: 0;
+      padding: 1px 0;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 0 0 12px 12px;
+    }
+
+    .carousel-indicators button {
+      background-color: rgba(255, 255, 255, 0.6);
+      width: 30px;
+      height: 4px;
+      margin: 0 5px;
+      border: none;
+      transition: all 0.3s ease;
+    }
+
+    .carousel-indicators button.active {
+      background-color: #fff;
+      width: 40px;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.7;
+      position: absolute;
+      z-index: 100;
+    }
+
+    .carousel-control-prev:hover,
+    .carousel-control-next:hover {
+      opacity: 1;
+      background: rgba(0, 0, 0, 0.9);
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .carousel-control-prev {
+      left: 0;
+    }
+
+    .carousel-control-next {
+      right: 0;
+    }
+
+    /* =====================
+   顯示切換控制
+===================== */
+    .tab-pane {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .tab-pane.show.active {
+      display: block;
+      opacity: 1;
+    }
+
+    .nav-section {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .nav-section.show.active {
+      display: block;
+      opacity: 1;
+    }
+
+    /* =====================
+   側邊欄樣式
+===================== */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: -200px;
+      width: 250px;
+      background-color: #F3EDE6;
+      padding: 20px;
+      overflow-y: auto;
+      transition: all 0.3s ease;
+      border-right: 3px solid #B6A19A;
+      z-index: 1000;
+    }
+
+    .sidebar:hover {
+      left: 0;
+      box-shadow: 3px 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar-subtitle {
+      font-size: 0.85rem;
+      color: #3B4C5E;
+      margin: 20px 0 10px;
+      text-transform: uppercase;
+      font-weight: bold;
+      border-bottom: 2px solid #CFCAC8;
+      padding-bottom: 5px;
+    }
+
+    .sidebar .nav-link {
+      padding: 10px 15px;
+      font-size: 0.9rem;
+      color: #3B4C5E;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      margin-bottom: 8px;
+      background-color: #FAF8F6;
+      display: flex;
+      align-items: center;
+    }
+
+    .sidebar .nav-link:hover {
+      background-color: #EAE4DF;
+      color: #3B4C5E;
+      transform: translateX(5px);
+    }
+
+    .sidebar .nav-link.active {
+      background-color: #3B4C5E;
+      color: white;
+      font-weight: bold;
+    }
+
+    .sidebar .nav-link i {
+      margin-right: 10px;
+      font-size: 1.1rem;
+      width: 24px;
+      text-align: center;
+      color: #3B4C5E;
+    }
+
+    .sidebar .nav-link.active i {
+      color: white;
+    }
+
+    .sidebar::after {
+      content: "\2190";
+      position: absolute;
+      right: -30px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #3B4C5E;
+      color: white;
+      width: 30px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0 6px 6px 0;
+      font-size: 1.2rem;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      opacity: 0.9;
+    }
+
+    /* =====================
+   子導覽樣式
+===================== */
+    .nav-group {
+      margin-bottom: 8px;
+    }
+
+    .nav-group-title {
+      background-color: #F8F9FA;
+      color: #3B4C5E;
+      padding: 10px 15px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      cursor: default;
+    }
+
+    .nav-group-title i {
+      margin-right: 10px;
+      font-size: 1.1rem;
+      width: 24px;
+      text-align: center;
+      color: #3B4C5E;
+    }
+
+    .nav-group-items {
+      padding-left: 15px;
+    }
+
+    .nav-link.sub-link {
+      padding: 8px 15px;
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+      background-color: #F8F9FA;
+      color: #3B4C5E;
+    }
+
+    .nav-link.sub-link:hover {
+      background-color: #EAEAEA;
+      transform: translateX(5px);
+      color: #3B4C5E;
+    }
+
+    .nav-link.sub-link.active {
+      background-color: #3B4C5E;
+      color: white;
+    }
+
+    .indent-rest {
+      padding-right: 17.5em;
+      /* 加兩個字元的空白寬度 */
+      text-indent: -2em;
+      /* 第一行回來 */
+      line-height: 1.6;
+    }
+
+
+    /* 移除内容框的边框和阴影 */
+    .content-box {
+      padding: 2rem;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .showcase-wrapper {
+      border-radius: 15px;
+      padding: 30px;
+      margin: 20px 0;
+      background: linear-gradient(135deg, #f7f3ef 0%, rgb(236, 225, 228) 100%);
+      /* 從淺椰色到深椰色的漸層 */
+      color: #fff;
+      /* 文字改為白色 */
+    }
+
+    /* 因為背景變淺，內容區塊的文字顏色也需要調整 */
+    .content-box h5 {
+      color: rgb(29, 38, 47);
+      /* 改為深色 */
+      font-weight: 600;
+      border-bottom: 2px solid rgb(29, 38, 47);
+      padding-bottom: 0.5rem;
+    }
+
+    .content-box .lead {
+      color: rgb(29, 38, 47);
+      /* 改為深色 */
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    /* 圖片效果 */
+    .fixed-image-wrapper {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .hover-shadow:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .fixed-image {
+      display: block;
+      /* 新增:使margin auto生效 */
+      margin: 0 auto;
+      /* 水平置中 */
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    /* 圖標樣式 */
+    .bi {
+      color: #3B4C5E;
+    }
+
+    /* 移除单个项目的边框和阴影 */
+    .showcase-item {
+      transition: all 0.3s ease;
+      padding: 2rem;
+      margin-bottom: 30px;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    /* 響應式調整 */
+    @media (max-width: 768px) {
+      .showcase-item {
+        padding: 1rem;
+      }
+
+      .content-box {
+        padding: 1rem;
+      }
+
+      .showcase-item .lead {
+        font-size: 1rem;
+      }
+    }
+
+    //* 104人力銀行的圓形卡片樣式 */
+    #job .scenario-card {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      background: #fff;
+      /* 添加白色背景 */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      /* 添加陰影 */
+      transition: all 0.3s ease;
+    }
+
+    /* 104人力銀行的圓形卡片樣式 */
+    #job .scenario-card {
+      width: 100%;
+      /* 改為 100% 寬度 */
+      height: auto;
+      /* 改為自動高度 */
+      padding: 20px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+      border-radius: 8px;
+      /* 改為方形圓角 */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    /* 調整圖標大小和顏色 */
+    #job .scenario-card i {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      color: #B6A19A;
+      transition: all 0.3s ease;
+    }
+
+    /* hover 效果 */
+    #job .scenario-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(182, 161, 154, 0.2);
+    }
+
+    #job .scenario-card:hover i {
+      color: #3B4C5E;
+    }
+
+    .custom-link-navy {
+      display: block;
+      padding: 0.75rem 1.25rem;
+      margin-top: 2rem;
+      background-color: #1c2a4d;
+      /* 深藍背景 */
+      color: #f5f0e6 !important;
+      /* 米色文字 */
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-align: center;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(28, 42, 77, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    /* 將按鈕固定在 nav 的底部 */
+    .nav-fixed-bottom {
+      position: absolute;
+      bottom: 100px;
+      left: 0.5rem;
+      right: 0.5rem;
+    }
+
+    /* 深藍底＋米色字的主題按鈕樣式 */
+    .custom-link-navy {
+      display: block;
+      padding: 0.75rem 1.25rem;
+      background-color: #1c2a4d;
+      /* 深藍背景 */
+      color: #f5f0e6 !important;
+      /* 米色文字 */
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .custom-link-navy:hover {
+      background-color: #16213a;
+      /* 更深的藍色 hover */
+      color: #fff8e1 !important;
+      /* 更亮的米色 */
+      transform: scale(1.03);
+    }
+
+    .custom-link-navy i {
+      color: #f5f0e6 !important;
+    }
+
+    .custom-link-navy:hover i {
+      color: #fff8e1 !important;
+    }
+
+    .trait-section-title {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-top: 60px;
+      margin-bottom: 30px;
+      color: #4a4a4a;
+    }
+
+    .trait-accordion .accordion-item {
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .trait-accordion .accordion-button {
+      background-color: #f2f2f2;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .trait-tag {
+      display: inline-block;
+      background-color: rgb(66, 51, 85);
+      /* 薰衣草霧 */
+      color: #ffffff;
+      /* 白色文字 */
+      padding: 6px 14px;
+      margin: 5px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+    }
+
+    .trait-tag:hover {
+      background-color: #b0a0c4;
+      /* hover 深一點的紫灰色 */
+    }
+
+    .accordion-body {
+      background-color: #fff;
+      padding: 15px 20px;
+    }
+
+    .accordion-button:not(.collapsed) {
+      background-color: #5C4033;
+      /* 展開時背景為深棕色 */
+      color: #ffffff;
+      /* 文字為白色 */
+    }
+
+    .accordion-button:focus {
+      box-shadow: none;
+      /* 移除藍色聚焦框 */
+    }
+
+    <style>.grid-flow {
+      display: grid;
+      grid-template-columns: repeat(5, auto);
+      grid-template-rows: repeat(3, auto);
+      gap: 20px 30px;
+      justify-content: center;
+      align-items: center;
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 30px;
+    }
+
+    .flow-box {
+      background: #3c4b57;
+      border: 2px solid #3c4b57;
+      border-radius: 12px;
+      padding: 16px 20px;
+      text-align: center;
+      min-width: 180px;
+      font-weight: 600;
+      color: #f5f5f0;
+      box-shadow: 0 3px 8px rgba(60, 75, 87, 0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: transform 0.2s ease;
+      font-size: 14px;
+    }
+
+    .flow-box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(60, 75, 87, 0.2);
+    }
+
+    .flow-box i {
+      font-size: 1.4rem;
+      color: #f5f5f0;
+      margin-bottom: 6px;
+    }
+
+    .flow-box small {
+      color: #e2e2d5;
+      font-size: 0.85em;
+    }
+
+    .arrow-h,
+    .arrow-v {
+      font-size: 1.2rem;
+      color: #3c4b57;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-weight: normal;
+      white-space: nowrap;
+    }
+
+    .arrow-h span,
+    .arrow-v span {
+      font-size: 0.8rem;
+      color: #5a6a77;
+    }
+
+    .arrow-v {
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    .flow-title {
+      text-align: center;
+      font-size: 1.9rem;
+      font-weight: bold;
+      color: #3c4b57;
+      margin-top: 60px;
+      /* 👈 再下移一些 */
+      margin-bottom: 30px;
+      font-family: 'Noto Sans TC', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .flow-title,
+    .flow-title::before,
+    .flow-title::after {
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      content: none !important;
+      display: block;
+    }
+
+    .grid-flow {
+      display: grid;
+      grid-template-columns: repeat(5, auto);
+      grid-template-rows: repeat(3, auto);
+      gap: 20px 30px;
+      justify-content: center;
+      align-items: center;
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 30px;
+    }
+
+    .flow-box {
+      background: #3c4b57;
+      border: 2px solid #3c4b57;
+      border-radius: 12px;
+      padding: 16px 20px;
+      text-align: center;
+      min-width: 180px;
+      font-weight: 600;
+      color: #f5f5f0;
+      box-shadow: 0 3px 8px rgba(60, 75, 87, 0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: transform 0.2s ease;
+      font-size: 14px;
+    }
+
+    .flow-box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(60, 75, 87, 0.2);
+    }
+
+    .flow-box i {
+      font-size: 1.4rem;
+      color: #f5f5f0;
+      margin-bottom: 6px;
+    }
+
+    .flow-box small {
+      color: #e2e2d5;
+      font-size: 0.85em;
+    }
+
+    .arrow-h,
+    .arrow-v {
+      font-size: 1.2rem;
+      color: #3c4b57;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-weight: normal;
+      white-space: nowrap;
+    }
+
+    .arrow-h span,
+    .arrow-v span {
+      font-size: 0.8rem;
+      color: #5a6a77;
+    }
+
+    .arrow-v {
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    .flow-title {
+      text-align: center;
+      font-size: 1.9rem;
+      font-weight: bold;
+      color: #3c4b57;
+      margin-top: 60px;
+      /* 👈 再下移一些 */
+      margin-bottom: 30px;
+      font-family: 'Noto Sans TC', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .flow-title,
+    .flow-title::before,
+    .flow-title::after {
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      content: none !important;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 側邊導航欄 -->
+  <div class="sidebar">
+
+    <!-- 輿論大數據導航 -->
+    <div id="poa-nav" class="nav-section">
+      <h6 class="sidebar-subtitle">輿論大數據網頁導航</h6>
+      <!-- 找到這段 HTML 並替換 -->
+      <!-- 側邊導覽列 -->
+      <nav class="nav flex-column nav-pills mb-4 position-relative" style="min-height: 100vh;">
+        <a class="nav-link" href="#ltn_crawler_intro"><i class="bi bi-tags me-2"></i>爬蟲斷詞介紹</a>
+        <a class="nav-link" href="#topword"><i class="bi bi-tags me-2"></i>熱門關鍵詞分析</a>
+        <a class="nav-link" href="#topperson"><i class="bi bi-people me-2"></i>熱門人物分析</a>
+        <a class="nav-link" href="#userkeyword"><i class="bi bi-search me-2"></i>分析你關心的關鍵詞</a>
+
+        <!-- 分群導覽 -->
+        <div class="nav-group">
+          <div class="nav-link nav-group-title">
+            <i class="bi bi-diagram-3 me-2"></i>全文檢索與關聯分析
+          </div>
+          <div class="nav-group-items">
+            <a class="nav-link sub-link" href="#userkeyword_assoc">
+              <i class="bi bi-arrow-return-right me-2"></i>基礎版
+            </a>
+            <a class="nav-link sub-link" href="#userkeyword_db">
+              <i class="bi bi-arrow-return-right me-2"></i>進階版
+            </a>
+          </div>
+        </div>
+
+        <a class="nav-link" href="#userkeyword_senti"><i class="bi bi-emoji-smile me-2"></i>關鍵詞情緒分析</a>
+        <a class="nav-link" href="#userkeyword_report"><i class="bi bi-file-text me-2"></i>AI分析報告</a>
+        <a class="nav-link" href="#trump"><i class="bi bi-graph-up me-2"></i>聲量觀察</a>
+        <a class="nav-link" href="#mayor"><i class="bi bi-pie-chart me-2"></i>政治人物聲量觀測站</a>
+
+        <!-- 固定在底部的返回按鈕 -->
+        <a class="custom-link-navy nav-fixed-bottom" href="/">
+          <i class="bi bi-arrow-left-circle me-2"></i>輿論大數據網頁
+        </a>
+      </nav>
+    </div>
+
+    <!-- 人力銀行導航 -->
+    <div id="job-nav" class="nav-section position-relative" style="min-height: 100vh;">
+      <h6 class="sidebar-subtitle">104人力銀行網頁導覽</h6>
+
+      <nav class="nav flex-column nav-pills">
+        <a class="nav-link" href="#crawler_intro">
+          <i class="bi bi-code-slash me-2"></i>爬蟲斷詞介紹
+        </a>
+        <a class="nav-link" href="#job_detail">
+          <i class="bi bi-briefcase me-2"></i>職缺詳情分析
+        </a>
+        <a class="nav-link" href="#hot_keywords">
+          <i class="bi bi-hash me-2"></i>熱門關鍵字分析
+        </a>
+        <a class="nav-link" href="#keyword_trends">
+          <i class="bi bi-graph-up-arrow me-2"></i>關鍵字趨勢分析
+        </a>
+        <a class="nav-link" href="#salary_analysis">
+          <i class="bi bi-cash-stack me-2"></i>薪資分布分析
+        </a>
+        <a class="nav-link" href="#skills_analysis">
+          <i class="bi bi-tools me-2"></i>擅長工具分析
+        </a>
+        <a class="nav-link" href="#personal_condition">
+          <i class="bi bi-person-vcard me-2"></i>個人條件分析
+        </a>
+        <a class="nav-link" href="#personality_analysis">
+          <i class="bi bi-person-hearts me-2"></i>個人特質分析
+        </a>
+
+        <!-- 固定在底部的返回按鈕（往上浮一點） -->
+        <a class="custom-link-navy nav-fixed-bottom" href="/104/">
+          <i class="bi bi-arrow-left-circle me-2"></i>104人力銀行網頁
+        </a>
+
+      </nav>
+    </div>
+  </div>
+
+  <!-- 主要內容區 -->
+  <div class="main-content">
+    <!-- 標題和按鈕區域 -->
+    <div class="header-container">
+      <h1 class="page-title">作品集網頁介紹</h1>
+      <div class="btn-group">
+        <button class="btn btn-primary active" data-bs-toggle="tab" data-project="poa">
+          <i class="bi bi-newspaper me-2"></i>輿論大數據
+        </button>
+        <button class="btn btn-primary" data-bs-toggle="tab" data-project="job">
+          <i class="bi bi-briefcase me-2"></i>人力銀行
+        </button>
+      </div>
+    </div>
+
+    <!-- 內容容器 -->
+    <!-- 輿論大數據內容 -->
+    <div id="poa" class="tab-pane active">
+      <div class="project-description" style="line-height: 2;">
+        <p>透過爬蟲技術分析新聞<strong>(自由時報)</strong>媒體的輿論走向，深入了解社會關注的議題與人物</p>
+        <p><strong>五類：</strong>政治、社會、生活、國際、蒐集</p>
+      </div>
+      <section id="ltn_crawler_intro" class="page-section">
+        <h2><i class="bi bi-code-slash me-2"></i>新聞爬蟲與斷詞流程介紹</h2>
+
+        <!-- 功能概述 -->
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>
+            本模組透過 <strong>爬蟲 ➝ 中文斷詞 ➝ 關鍵詞分析</strong> 三階段流程，自動化擷取新聞網站內容，並使用 CKIPTagger 萃取具代表性的動詞與名詞詞彙。結合 TF-IDF
+            與詞彙分類技術，應用於情緒分析與議題關注趨勢探索。
+          </p>
+        </div>
+
+        <!-- 手風琴區塊 -->
+        <div class="accordion mt-5" id="crawlerAccordion">
+          <h4>詳細介紹</h4>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseOne">
+                階段一：新聞資料擷取
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#crawlerAccordion">
+              <div class="accordion-body">
+                使用 <code>requests</code> 與 <code>BeautifulSoup</code> 擷取新聞列表與文章 HTML，整理新聞標題、時間、連結、圖片與內文，並儲存為結構化資料。
+                <ul>
+                  <li>模擬 GET 請求取得 HTML</li>
+                  <li>擷取各欄位（標題、時間、內容）</li>
+                  <li>清除冗餘標籤與廣告內容</li>
+                  <li>儲存為結構化 CSV </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseTwo">
+                階段二：中文斷詞與詞性標註
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#crawlerAccordion">
+              <div class="accordion-body">
+                利用 <code>CKIPTagger</code> 處理新聞內文，切分成詞彙並標註詞性，篩選出具意義的名詞與動詞。
+                <ul>
+                  <li>分詞處理 → 拆解句子為詞組</li>
+                  <li>詞性標註 → 選取關鍵詞性（如動詞、名詞）</li>
+                  <li>清除虛詞、標點與無意義字</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseThree">
+                階段三：關鍵詞統計與視覺化
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#crawlerAccordion">
+              <div class="accordion-body">
+                使用 <code>Counter</code> 統計詞頻，搭配 <code>TF-IDF</code> 權重找出代表詞，並對詞彙進行分類，應用於議題分析與圖表呈現。
+                <ul>
+                  <li>詞頻統計（Counter）</li>
+                  <li>TF-IDF 分數加權代表詞</li>
+                  <li>詞彙分類：人物、事件、情緒</li>
+                  <li>產生文字雲、長條圖等視覺化</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 流程圖 -->
+        <h2 class="flow-title">
+          <i class="bi bi-diagram-3 me-2"></i>流程圖
+        </h2>
+        <div class="grid-flow">
+          <!-- 第一列 -->
+          <div class="flow-box">
+            <i class="bi bi-globe"></i>
+            擷取頁面<br><small>requests</small>
+          </div>
+          <div class="arrow-h">➡<span>HTML 分析</span></div>
+          <div class="flow-box">
+            <i class="bi bi-diagram-3"></i>
+            分頁與欄位解析<br><small>BeautifulSoup</small>
+          </div>
+          <div class="arrow-h">➡<span>文本擷取</span></div>
+          <div class="flow-box">
+            <i class="bi bi-translate"></i>
+            分詞 + 詞性標註<br><small>CKIPTagger</small>
+          </div>
+
+          <!-- 第二列 -->
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div class="arrow-v">⬇<span>CKIPTagger 輸出</span></div>
+
+          <!-- 第三列 -->
+          <div class="flow-box">
+            <i class="bi bi-bar-chart-line"></i>
+            視覺化輸出<br><small>WordCloud / Chart</small>
+          </div>
+          <div class="arrow-h">⬅<span>TF-IDF 統計</span></div>
+          <div class="flow-box">
+            <i class="bi bi-funnel"></i>
+            詞彙分類<br><small>人物 / 議題 / 情緒</small>
+          </div>
+          <div class="arrow-h">⬅<span>詞性篩選</span></div>
+          <div class="flow-box">
+            <i class="bi bi-sliders"></i>
+            詞性過濾<br><small>名詞 / 動詞</small>
+          </div>
+        </div>
+      </section>
+      <!-- 分析你關心的關鍵詞 -->
+      <!-- 熱門關鍵詞分析 -->
+      <section id="topword" class="page-section">
+        <h2><i class="bi bi-tags me-2"></i>熱門關鍵詞分析</h2>
+
+        <!-- 功能介紹卡片 -->
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>顯示近期新聞中最常出現的熱門關鍵詞，並依照新聞分類與詞頻數進行篩選。</p>
+          <div class="tech-tags">
+            <span class="tech-tag">關鍵字</span>
+            <span class="tech-tag">分類分析</span>
+            <span class="tech-tag">詞頻統計</span>
+            <span class="tech-tag">長條圖</span>
+          </div>
+        </div>
+
+        <!-- 分析維度與特色 -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="feature-box">
+              <h4>分析維度</h4>
+              <ul class="feature-list">
+                <li>熱門關鍵詞統計</li>
+                <li>依分類篩選新聞內容</li>
+                <li>限制顯示的關鍵詞數量</li>
+                <li>呈現詞頻對應次數</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-box">
+              <h4>功能特色</h4>
+              <ul class="feature-list">
+                <li>清晰的文字列表呈現</li>
+                <li>依分類篩選資料</li>
+                <li>使用者自訂顯示數量</li>
+                <li>易於閱讀與操作介</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 視覺化展示 -->
+        <div class="visualization-showcase">
+          <!-- 添加區塊說明 -->
+          <h4 class="text-center mb-3">
+            <i class="bi bi-image me-2"></i>頁面展示
+          </h4>
+          <div class="carousel-container">
+            <div id="topwordCarousel" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img src="{% static 'app_poa_introduction/images/topword1.png' %}">
+                  <div class="carousel-caption">
+                    <h5>查詢條件設定</h5>
+                    <p>可選擇新聞分類與輸入熱門關鍵詞數量</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/topword2.png' %}">
+                  <div class="carousel-caption">
+                    <h5>熱門關鍵字清單</h5>
+                    <p>依據詞頻統計顯示前幾名熱門關鍵詞</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/topword3.png' %}">
+                  <div class="carousel-caption">
+                    <h5>熱門關鍵字統計圖</h5>
+                    <p>以條狀圖視覺化展示關鍵詞出現次數</p>
+                  </div>
+                </div>
+                <div class="carousel-indicators">
+                  <button type="button" data-bs-target="#topwordCarousel" data-bs-slide-to="0" class="active"
+                    aria-current="true" aria-label="Slide 1"></button>
+                  <button type="button" data-bs-target="#topwordCarousel" data-bs-slide-to="1"
+                    aria-label="Slide 2"></button>
+                  <button type="button" data-bs-target="#topwordCarousel" data-bs-slide-to="2"
+                    aria-label="Slide 3"></button>
+                </div>
+
+                <!-- 輪播控制按鈕 -->
+                <button class="carousel-control-prev custom-carousel-control" type="button"
+                  data-bs-target="#topwordCarousel" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next custom-carousel-control" type="button"
+                  data-bs-target="#topwordCarousel" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+              </div>
+
+              <button class="carousel-control-prev" type="button" data-bs-target="#topwordCarousel"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#topwordCarousel"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 應用場景 -->
+        <div class="application-scenarios">
+          <h4>應用場景</h4>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-newspaper"></i>
+                <h5>新聞整理</h5>
+                <p>快速了解近期新聞重點詞彙</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-lightning"></i>
+                <h5>即時掌握</h5>
+                <p>快速掌握關鍵字熱門程度</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-pie-chart"></i>
+                <h5>分類統計</h5>
+                <p>依新聞類別顯示關鍵詞分布</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 開始分析按鈕 -->
+        <div class="text-center mt-4">
+          <a href="/topword/" class="btn btn-outline-dark btn-lg">
+            立即前往<i class="bi bi-box-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </section>
+
+      <!-- 熱門人物分析 -->
+      <section id="topperson" class="page-section">
+        <h2><i class="bi bi-people me-2"></i>熱門人物分析</h2>
+
+        <!-- 功能介紹卡片 -->
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>顯示近期新聞中被報導次數最多的人物，並可依新聞分類與人名數量進行查詢，呈現文字與圖表結果。</p>
+          <div class="tech-tags">
+            <span class="tech-tag">人物</span>
+            <span class="tech-tag">分類分析</span>
+            <span class="tech-tag">詞頻統計</span>
+            <span class="tech-tag">長條圖</span>
+          </div>
+        </div>
+
+        <!-- 分析維度與特色 -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="feature-box">
+              <h4>分析維度</h4>
+              <ul class="feature-list">
+                <li>人物出現次數</li>
+                <li>新聞分類條件篩選</li>
+                <li>關鍵詞人名列表</li>
+                <li>條狀圖資料視覺化</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-box">
+              <h4>功能特色</h4>
+              <ul class="feature-list">
+                <li>查詢設定簡單直覺</li>
+                <li>同步顯示人名與次數</li>
+                <li>支援前幾名數量調整</li>
+                <li>結果清楚易讀</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 視覺化展示 -->
+        <div class="visualization-showcase">
+          <h4 class="text-center mb-3">
+            <i class="bi bi-image me-2"></i>頁面展示
+          </h4>
+          <div class="carousel-container">
+            <div id="toppersonCarousel" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img src="{% static 'app_poa_introduction/images/topperson1.png' %}">
+                  <div class="carousel-caption">
+                    <h5>查詢條件設定</h5>
+                    <p>選擇新聞分類與欲顯示的熱門人物數量</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/topperson2.png' %}">
+                  <div class="carousel-caption">
+                    <h5>熱門人物文字清單</h5>
+                    <p>顯示人物名稱與出現次數排行</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/topperson3.png' %}">
+                  <div class="carousel-caption">
+                    <h5>熱門人物統計圖</h5>
+                    <p>以長條圖視覺化展示人物出現頻率</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 輪播指示器 -->
+              <div class="carousel-indicators">
+                <button type="button" data-bs-target="#toppersonCarousel" data-bs-slide-to="0" class="active"></button>
+                <button type="button" data-bs-target="#toppersonCarousel" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#toppersonCarousel" data-bs-slide-to="2"></button>
+              </div>
+
+              <!-- 輪播控制按鈕 -->
+              <button class="carousel-control-prev" type="button" data-bs-target="#toppersonCarousel"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#toppersonCarousel"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 應用場景 -->
+        <div class="application-scenarios">
+          <h4>應用場景</h4>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-graph-up"></i>
+                <h5>輿論追蹤</h5>
+                <p>追蹤公眾人物的新聞關注度</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-search"></i>
+                <h5>人物研究</h5>
+                <p>分析特定人物的新聞出現脈絡</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-diagram-3"></i>
+                <h5>關聯分析</h5>
+                <p>探索人物之間的新聞關聯性</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="text-center mt-4">
+          <a href="/topperson/" class="btn btn-outline-dark btn-lg">
+            立即前往<i class="bi bi-box-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </section>
+
+
+
+      <!-- 分析你關心的關鍵詞 -->
+      <section id="userkeyword" class="page-section">
+        <h2><i class="bi bi-search me-2"></i>分析你關心的關鍵詞</h2>
+
+        <!-- 功能介紹卡片 -->
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>讓使用者可以輸入自己關心的詞彙，查詢它們在新聞中的熱度，包括被提及的篇數、次數、出現時間分布與類別統計。</p>
+          <div class="tech-tags">
+            <span class="tech-tag">所有</span>
+            <span class="tech-tag">分類分析</span>
+            <span class="tech-tag">詞頻統計</span>
+            <span class="tech-tag">折線趨勢圖</span>
+          </div>
+        </div>
+
+        <!-- 分析維度與特色 -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="feature-box">
+              <h4>分析維度</h4>
+              <ul class="feature-list">
+                <li>詞彙出現篇數</li>
+                <li>詞彙出現次數</li>
+                <li>分類別新聞熱度統計</li>
+                <li>出現時間分布圖</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-box" style="height: 219px;">
+              <h4>功能特色</h4>
+              <ul class="feature-list">
+                <li>支援多關鍵詞查詢</li>
+                <li>支援 AND / OR 搜尋邏輯</li>
+                <li>支援分類與週期篩選</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 視覺化展示 -->
+        <div class="visualization-showcase">
+          <h4 class="text-center mb-3">
+            <i class="bi bi-image me-2"></i>頁面展示
+          </h4>
+          <div class="carousel-container">
+            <div id="userkeywordCarousel" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img src="{% static 'app_poa_introduction/images/userkeyword1.png' %}">
+                  <div class="carousel-caption">
+                    <h5>查詢條件設定</h5>
+                    <p>可輸入多個關鍵詞並設定條件與篩選參數</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/userkeyword2.png' %}">
+                  <div class="carousel-caption">
+                    <h5>出現篇數與次數統計</h5>
+                    <p>呈現各分類中詞彙的出現篇數與總提及次數</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/userkeyword3.png' %}">
+                  <div class="carousel-caption">
+                    <h5>分類熱度比較</h5>
+                    <p>比較詞彙在不同新聞分類中的熱度</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/userkeyword4.png' %}">
+                  <div class="carousel-caption">
+                    <h5>時間序列圖</h5>
+                    <p>以折線圖顯示每日聲量變化趨勢</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 輪播指示器 -->
+              <div class="carousel-indicators">
+                <button type="button" data-bs-target="#userkeywordCarousel" data-bs-slide-to="0"
+                  class="active"></button>
+                <button type="button" data-bs-target="#userkeywordCarousel" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#userkeywordCarousel" data-bs-slide-to="2"></button>
+                <button type="button" data-bs-target="#userkeywordCarousel" data-bs-slide-to="3"></button>
+              </div>
+
+              <!-- 輪播控制按鈕 -->
+              <button class="carousel-control-prev" type="button" data-bs-target="#userkeywordCarousel"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#userkeywordCarousel"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 應用場景 -->
+        <div class="application-scenarios">
+          <h4>應用場景</h4>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-search"></i>
+                <h5>主題追蹤</h5>
+                <p>追蹤特定議題的發展趨勢</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-graph-up"></i>
+                <h5>聲量分析</h5>
+                <p>監測關鍵詞的討論熱度</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-pie-chart"></i>
+                <h5>分類分析</h5>
+                <p>了解各類別的分布情形</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 開始分析按鈕 -->
+        <div class="text-center mt-4">
+          <a href="/userkeyword/" class="btn btn-outline-dark btn-lg">
+            立即前往<i class="bi bi-box-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </section>
+
+      <!-- 全文檢索與關聯分析(基本版) -->
+      <section id="userkeyword_assoc" class="page-section">
+        <h2><i class="bi bi-diagram-3 me-2"></i>全文檢索與關聯分析(基本版)</h2>
+
+        <!-- 功能介紹卡片 -->
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>對你想要了解的議題進行全文檢索，找出有哪些詞與你的關鍵詞一起出現？</p>
+          <div class="tech-tags">
+            <span class="tech-tag">所有</span>
+            <span class="tech-tag">文字雲</span>
+            <span class="tech-tag">語境擷取</span>
+            <span class="tech-tag">詞頻統計</span>
+          </div>
+        </div>
+
+        <!-- 分析維度與特色 -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="feature-box">
+              <h4>分析維度</h4>
+              <ul class="feature-list">
+                <li>關鍵詞查詢條件設定</li>
+                <li>同時出現的關聯詞彙</li>
+                <li>新聞篇數與段落比對</li>
+                <li>類別分布與統計排序</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-box">
+              <h4>功能特色</h4>
+              <ul class="feature-list">
+                <li>支援 AND / OR 搜尋邏輯</li>
+                <li>分類與週期自由選擇</li>
+                <li>視覺化文字雲與統計圖</li>
+                <li>新聞標題與段落展示</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 視覺化展示 -->
+        <div class="visualization-showcase">
+          <h4 class="text-center mb-3">
+            <i class="bi bi-image me-2"></i>頁面展示
+          </h4>
+          <div class="carousel-container">
+            <div id="userkeywordAssocCarousel" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img src="{% static 'app_poa_introduction/images/Userkeywordassoc1.png' %}">
+                  <div class="carousel-caption">
+                    <h5>查詢條件設定</h5>
+                    <p>輸入關心詞彙、條件與篩選週期</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/Userkeywordassoc2.png' %}">
+                  <div class="carousel-caption">
+                    <h5>文字雲視覺化</h5>
+                    <p>展示與輸入詞彙同時出現的詞彙</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/Userkeywordassoc3.png' %}">
+                  <div class="carousel-caption">
+                    <h5>新聞標題清單</h5>
+                    <p>列出符合條件的新聞標題與篇數</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/Userkeywordassoc4.png' %}">
+                  <div class="carousel-caption">
+                    <h5>新聞段落展示</h5>
+                    <p>標示出輸入詞彙所在的段落文字</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/Userkeywordassoc5.png' %}">
+                  <div class="carousel-caption">
+                    <h5>共現詞統計圖</h5>
+                    <p>統計與你輸入詞彙同時出現的關鍵詞</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 輪播指示器 -->
+              <div class="carousel-indicators">
+                <button type="button" data-bs-target="#userkeywordAssocCarousel" data-bs-slide-to="0"
+                  class="active"></button>
+                <button type="button" data-bs-target="#userkeywordAssocCarousel" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#userkeywordAssocCarousel" data-bs-slide-to="2"></button>
+                <button type="button" data-bs-target="#userkeywordAssocCarousel" data-bs-slide-to="3"></button>
+                <button type="button" data-bs-target="#userkeywordAssocCarousel" data-bs-slide-to="4"></button>
+              </div>
+
+              <!-- 輪播控制按鈕 -->
+              <button class="carousel-control-prev" type="button" data-bs-target="#userkeywordAssocCarousel"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#userkeywordAssocCarousel"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="application-scenarios">
+          <h4>應用場景</h4>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-search"></i>
+                <h5>新聞探索</h5>
+                <p>快速定位目標上下文</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-graph-up"></i>
+                <h5>趨勢分析</h5>
+                <p>追蹤關鍵詞的變化</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-diagram-3"></i>
+                <h5>關聯探索</h5>
+                <p>關鍵詞共現詞彙統計</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- 開始分析按鈕 -->
+        <div class="text-center mt-4">
+          <a href="/userkeyword_assoc/" class="btn btn-outline-dark btn-lg">
+            立即前往<i class="bi bi-box-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </section>
+      <section id="userkeyword_db" class="page-section">
+        <h2><i class="bi bi-diagram-3 me-2"></i>全文檢索與關聯分析(進階DB版)</h2>
+
+        <!-- 功能介紹卡片 -->
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>以 Django 後台資料庫為基礎，實現快速且準確的全文檢索，並整合詞頻分析、分類統計、文字雲、段落擷取與時間序列等功能，提供完整的新聞關鍵詞探勘平台。</p>
+          <div class="tech-tags">
+            <span class="tech-tag">所有</span>
+            <span class="tech-tag">後台管理</span>
+            <span class="tech-tag">文字雲</span>
+            <span class="tech-tag">語境擷取</span>
+            <span class="tech-tag">詞頻統計</span>
+            <span class="tech-tag">折線趨勢圖</span>
+
+          </div>
+        </div>
+
+        <!-- 分析維度與特色 -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="feature-box" style="height: 219px;">
+              <h4>功能特色</h4>
+              <ul class="feature-list">
+                <li>Django 後台</li>
+                <li>關聯詞頻統計與視覺化文字雲</li>
+                <li>新聞標題與段落文字即時顯示</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-box">
+              <h4>使用 Django 後台的優勢</h4>
+              <ul class="feature-list">
+                <li>即時新增、修改新聞資料，無需重載 CSV</li>
+                <li>透過資料庫儲存新聞資料，可快速處理與查詢大量內容。</li>
+                <li>介面一致，便於維護與管理</li>
+                <li>內建使用者、群組與權限系統，方便控管資料存取</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 視覺化展示 -->
+        <div class="visualization-showcase">
+          <h4 class="text-center mb-3">
+            <i class="bi bi-image me-2"></i>頁面展示
+          </h4>
+          <div class="carousel-container">
+            <div id="userkeywordDbCarousel" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img src="{% static 'app_poa_introduction/images/Userkeyworddb1.png' %}">
+                  <div class="carousel-caption">
+                    <h5>資料後台總覽</h5>
+                    <p>透過 Django admin 管理所有新聞資料</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/Userkeyworddb2.png' %}">
+                  <div class="carousel-caption">
+                    <h5>進階查詢條件</h5>
+                    <p>可複選多關鍵詞並指定新聞類別與週期</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/Userkeyworddb3.png' %}">
+                  <div class="carousel-caption">
+                    <h5>共現詞彙文字雲</h5>
+                    <p>與輸入關鍵詞同時出現的熱門詞彙</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/Userkeyworddb4.png' %}">
+                  <div class="carousel-caption">
+                    <h5>新聞標題結果</h5>
+                    <p>以列表方式呈現符合條件的新聞標題</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/Userkeyworddb5.png' %}">
+                  <div class="carousel-caption">
+                    <h5>段落擷取</h5>
+                    <p>直接顯示關鍵詞所在段落的上下文語境</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/Userkeyworddb6.png' %}">
+                  <div class="carousel-caption">
+                    <h5>詞頻統計列表</h5>
+                    <p>列出所有與關鍵詞共現的詞彙與出現次數</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/Userkeyworddb7.png' %}">
+                  <div class="carousel-caption">
+                    <h5>分類分析</h5>
+                    <p>新聞分類提及與篇數統計</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/Userkeyworddb8.png' %}">
+                  <div class="carousel-caption">
+                    <h5>時間序列變化</h5>
+                    <p>觀察新聞聲量隨時間的變化趨勢</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="{% static 'app_poa_introduction/images/Userkeyworddb9.png' %}">
+                  <div class="carousel-caption">
+                    <h5>提及次數分類</h5>
+                    <p>依分類分析提及頻率與熱度</p>
+                  </div>
+                </div>
+              </div>
+              <div class="carousel-indicators">
+                {% for i in "012345678" %}
+                <button type="button" data-bs-target="#userkeywordDbCarousel" data-bs-slide-to="{{ forloop.counter0 }}"
+                  class="{% if forloop.first %}active{% endif %}"></button>
+                {% endfor %}
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#userkeywordDbCarousel"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#userkeywordDbCarousel"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 應用場景 -->
+        <div class="application-scenarios mt-5">
+          <h4>應用場景</h4>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-lightning-charge"></i>
+                <h5>即時資料管理</h5>
+                <p>即時新增、編輯資料</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-search"></i>
+                <h5>新聞探索</h5>
+                <p>快速定位目標上下文</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-graph-up"></i>
+                <h5>趨勢分析</h5>
+                <p>追蹤關鍵詞的變化</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-diagram-3"></i>
+                <h5>關聯探索</h5>
+                <p>關鍵詞共現詞彙統計</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 開始分析按鈕 -->
+        <div class="text-center mt-4">
+          <a href="/userkeyword_db/" class="btn btn-outline-dark btn-lg">
+            立即前往<i class="bi bi-box-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </section>
+      <!-- 關鍵詞情緒分析 -->
+      <section id="userkeyword_senti" class="page-section">
+        <h2><i class="bi bi-emoji-smile me-2"></i>關鍵詞情緒分析</h2>
+
+        <!-- 功能介紹卡片 -->
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>透過自然語言處理技術，分析新聞文本中關鍵詞的情緒傾向，了解媒體報導的情感色彩與輿論走向。</p>
+          <div class="tech-tags">
+            <span class="tech-tag">所有</span>
+            <span class="tech-tag">情感分析</span>
+            <span class="tech-tag">圓餅圖</span>
+            <span class="tech-tag">折線趨勢圖</span>
+          </div>
+        </div>
+
+        <!-- 分析維度與功能特色 -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="feature-box">
+              <h4>分析維度</h4>
+              <ul class="feature-list">
+                <li>正面情緒統計</li>
+                <li>負面情緒統計</li>
+                <li>中立情緒分析</li>
+                <li>情緒分布走勢</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-box">
+              <h4>功能特色</h4>
+              <ul class="feature-list">
+                <li>情緒趨勢追蹤</li>
+                <li>分類別情緒分析</li>
+                <li>支援 AND / OR 搜尋邏輯</li>
+                <li>視覺化數據呈現</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 圖片輪播展示（非即時）-->
+        <div class="visualization-showcase mt-4">
+          <h4 class="text-center mb-3">
+            <i class="bi bi-image me-2"></i>頁面展示
+          </h4>
+          <div id="userkeywordSentiCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img src="{% static 'app_poa_introduction/images/Userkeywordsenti1.png' %}">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>查詢條件設定</h5>
+                  <p>輸入關鍵詞、選擇邏輯條件、分類與週期進行分析</p>
+                </div>
+              </div>
+              <div class="carousel-item">
+                <img src="{% static 'app_poa_introduction/images/Userkeywordsenti2.png' %}">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>情緒分佈統計</h5>
+                  <p>統計各新聞對關鍵詞的情緒傾向（正面／負面／中立）</p>
+                </div>
+              </div>
+              <div class="carousel-item">
+                <img src="{% static 'app_poa_introduction/images/Userkeywordsenti3.png' %}">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>情緒趨勢變化</h5>
+                  <p>觀察正負面新聞每日變化，掌握情緒走勢</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 輪播指示器 -->
+            <div class="carousel-indicators">
+              <button type="button" data-bs-target="#userkeywordSentiCarousel" data-bs-slide-to="0"
+                class="active"></button>
+              <button type="button" data-bs-target="#userkeywordSentiCarousel" data-bs-slide-to="1"></button>
+              <button type="button" data-bs-target="#userkeywordSentiCarousel" data-bs-slide-to="2"></button>
+            </div>
+
+            <!-- 左右切換 -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#userkeywordSentiCarousel"
+              data-bs-slide="prev">
+              <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#userkeywordSentiCarousel"
+              data-bs-slide="next">
+              <span class="carousel-control-next-icon"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 應用場景 -->
+        <div class="application-scenarios mt-5">
+          <h4>應用場景</h4>
+          <div class="row text-center">
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-graph-up"></i>
+                <h5>輿情監測</h5>
+                <p>追蹤議題的情緒動向</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-pie-chart"></i>
+                <h5>媒體傾向觀察</h5>
+                <p>掌握議題的立場偏向</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-clock-history"></i>
+                <h5>趨勢演變追蹤</h5>
+                <p>觀察新聞情緒的變化</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-bar-chart"></i>
+                <h5>分類情緒分析</h5>
+                <p>比較分類的情緒分佈</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 前往分析按鈕 -->
+        <div class="text-center mt-4">
+          <a href="/userkeyword_senti/" class="btn btn-outline-dark btn-lg">
+            立即前往<i class="bi bi-box-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </section>
+
+      <!-- AI聲量分析報告 -->
+      <section id="userkeyword_report" class="page-section">
+        <h2><i class="bi bi-robot me-2"></i>AI分析報告</h2>
+
+        <!-- 功能介紹卡片 -->
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>運用人工智慧技術，為您的關鍵詞自動生成完整的新聞聲量分析報告，包含正負面情緒、文章分類、熱度趨勢等多維度分析。</p>
+          <div class="tech-tags">
+            <span class="tech-tag">所有</span>
+            <span class="tech-tag">AI分析</span>
+            <span class="tech-tag">情感分析</span>
+            <span class="tech-tag">折線趨勢圖</span>
+            <span class="tech-tag">詞頻統計</span>
+            <span class="tech-tag">圓餅圖</span>
+
+          </div>
+        </div>
+
+        <!-- 分析維度與特色 -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="feature-box">
+              <h4>分析維度</h4>
+              <ul class="feature-list">
+                <li>正負面情緒分析</li>
+                <li>新聞分類統計</li>
+                <li>時間趨勢追蹤</li>
+                <li>AI研判報告</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-box">
+              <h4>功能特色</h4>
+              <ul class="feature-list">
+                <li>自動化分析報告</li>
+                <li>多維度數據呈現</li>
+                <li>視覺化圖表輔助</li>
+                <li>支援新聞分類與情緒分布比較</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 視覺化展示區（使用六張圖） -->
+        <div class="visualization-showcase">
+          <h4 class="text-center mb-3">
+            <i class="bi bi-image me-2"></i>頁面展示
+          </h4>
+
+          <div id="userkeywordAiCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+
+              <div class="carousel-item active">
+                <img src="{% static 'app_poa_introduction/images/userkeywordreport1.png' %}" class="d-block w-100"
+                  alt="查詢條件輸入">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>輸入查詢條件</h5>
+                  <p>輸入關鍵字並設定新聞類別、週期與條件</p>
+                </div>
+              </div>
+
+              <div class="carousel-item">
+                <img src="{% static 'app_poa_introduction/images/userkeywordreport2.png' %}" class="d-block w-100"
+                  alt="AI自動產出報告">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>AI分析報告摘要</h5>
+                  <p>自動產出標題、摘要、關鍵字與初步結論</p>
+                </div>
+              </div>
+
+              <div class="carousel-item">
+                <img src="{% static 'app_poa_introduction/images/userkeywordreport3.png' %}" class="d-block w-100"
+                  alt="聲量趨勢圖">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>聲量趨勢圖</h5>
+                  <p>觀察該議題在時間軸上的報導數變化</p>
+                </div>
+              </div>
+
+              <div class="carousel-item">
+                <img src="{% static 'app_poa_introduction/images/userkeywordreport4.png' %}" class="d-block w-100"
+                  alt="分類熱度表格">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>新聞分類統計</h5>
+                  <p>列出每個類別的聲量數據，呈現熱門程度</p>
+                </div>
+              </div>
+
+              <div class="carousel-item">
+                <img src="{% static 'app_poa_introduction/images/userkeywordreport5.png' %}" class="d-block w-100"
+                  alt="情緒分布圖">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>情緒分佈圖</h5>
+                  <p>統計正面、負面與中立文章的比例</p>
+                </div>
+              </div>
+
+              <div class="carousel-item">
+                <img src="{% static 'app_poa_introduction/images/userkeywordreport6.png' %}" class="d-block w-100"
+                  alt="情緒變化趨勢">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>情緒趨勢圖</h5>
+                  <p>追蹤情緒隨時間的變化與轉折點</p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- 輪播指示器 -->
+            <div class="carousel-indicators">
+              <button type="button" data-bs-target="#userkeywordAiCarousel" data-bs-slide-to="0"
+                class="active"></button>
+              <button type="button" data-bs-target="#userkeywordAiCarousel" data-bs-slide-to="1"></button>
+              <button type="button" data-bs-target="#userkeywordAiCarousel" data-bs-slide-to="2"></button>
+              <button type="button" data-bs-target="#userkeywordAiCarousel" data-bs-slide-to="3"></button>
+              <button type="button" data-bs-target="#userkeywordAiCarousel" data-bs-slide-to="4"></button>
+              <button type="button" data-bs-target="#userkeywordAiCarousel" data-bs-slide-to="5"></button>
+            </div>
+
+            <!-- 輪播控制按鈕 -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#userkeywordAiCarousel"
+              data-bs-slide="prev">
+              <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#userkeywordAiCarousel"
+              data-bs-slide="next">
+              <span class="carousel-control-next-icon"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 應用場景 -->
+        <div class="application-scenarios mt-5">
+          <h4>應用場景</h4>
+          <div class="row text-center">
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-graph-up"></i>
+                <h5>輿情監測</h5>
+                <p>AI自動追蹤議題走向</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-file-text"></i>
+                <h5>報告生成</h5>
+                <p>快速產出分析報告</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-clock-history"></i>
+                <h5>趨勢分析</h5>
+                <p>掌握輿論發展脈動</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-lightning"></i>
+                <h5>即時監控</h5>
+                <p>即時掌握聲量變化</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 前往分析按鈕 -->
+        <div class="text-center mt-4">
+          <a href="/userkeyword_report/" class="btn btn-outline-dark btn-lg">
+            立即前往<i class="bi bi-box-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </section>
+      <!-- 川普聲量觀察分析 -->
+      <section id="trump" class="page-section">
+        <h2><i class="bi bi-bar-chart-line me-2"></i>聲量分析</h2>
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>基於新聞報導，針對一個你關心的人、事、物做深入的分析，統計資料以最近 4 週為範圍，觀察其在新聞中的曝光情況。</p>
+          <div class="tech-tags mt-2">
+            <span class="tech-tag">所有</span>
+            <span class="tech-tag">聲量分析</span>
+            <span class="tech-tag">長條圖</span>
+            <span class="tech-tag">折線趨勢圖</span>
+            <span class="tech-tag">詞頻統計</span>
+          </div>
+        </div>
+
+        <!-- 分析維度 -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="feature-box">
+              <h4>指標定義</h4>
+              <ul class="feature-list">
+                <li><strong>總篇數：</strong>出現該關鍵字的新聞報導總數</li>
+                <li><strong>總次數：</strong>該關鍵字在新聞內部被提及的總次數</li>
+                <li><strong>類別統計：</strong>聲量依新聞類別分類</li>
+                <li><strong>時間變化：</strong>每日報導數量波動與趨勢</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-box" style="min-height: 218px;">
+              <h4>功能特色</h4>
+              <ul class="feature-list">
+                <li>呈現新聞曝光程度與時間變化</li>
+                <li>支援分類與時間統計的多元視角</li>
+                <li>搭配 Django Template 可動態更新數據</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 輪播圖展示 -->
+        <div class="visualization-showcase mt-4">
+          <h4 class="text-center mb-3">
+            <i class="bi bi-image me-2"></i>頁面展示
+          </h4>
+
+          <div id="trumpVolumeCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+
+              <div class="carousel-item active">
+                <img src="{% static 'app_poa_introduction/images/Trump1.png' %}" class="d-block w-100" alt="川普聲量總覽">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>網路聲量總覽</h5>
+                  <p>統計川普在新聞中出現的總篇數與總次數</p>
+                </div>
+              </div>
+
+              <div class="carousel-item">
+                <img src="{% static 'app_poa_introduction/images/Trump2.png' %}" class="d-block w-100" alt="分類統計長條圖">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>新聞分類聲量統計</h5>
+                  <p>依新聞類型（如政治、國際）分類聲量數據</p>
+                </div>
+              </div>
+
+              <div class="carousel-item">
+                <img src="{% static 'app_poa_introduction/images/Trump3.png' %}" class="d-block w-100" alt="聲量時間變化圖">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>聲量隨時間變化</h5>
+                  <p>觀察特定時間區段的聲量起伏趨勢</p>
+                </div>
+              </div>
+
+              <div class="carousel-item">
+                <img src="{% static 'app_poa_introduction/images/Trump4.png' %}" class="d-block w-100" alt="聲量表格統計">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>分類表格統計</h5>
+                  <p>以表格方式呈現聲量數據，使用 Django Template 實作</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 輪播指示器 -->
+            <div class="carousel-indicators">
+              <button type="button" data-bs-target="#trumpVolumeCarousel" data-bs-slide-to="0" class="active"
+                aria-label="Slide 1"></button>
+              <button type="button" data-bs-target="#trumpVolumeCarousel" data-bs-slide-to="1"
+                aria-label="Slide 2"></button>
+              <button type="button" data-bs-target="#trumpVolumeCarousel" data-bs-slide-to="2"
+                aria-label="Slide 3"></button>
+              <button type="button" data-bs-target="#trumpVolumeCarousel" data-bs-slide-to="3"
+                aria-label="Slide 4"></button>
+            </div>
+
+            <!-- 輪播控制 -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#trumpVolumeCarousel"
+              data-bs-slide="prev">
+              <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#trumpVolumeCarousel"
+              data-bs-slide="next">
+              <span class="carousel-control-next-icon"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 應用場景 -->
+        <div class="application-scenarios mt-5">
+          <h4>應用場景</h4>
+          <div class="row text-center">
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-megaphone"></i>
+                <h5>議題熱度分析</h5>
+                <p>某人物或議題的新聞曝光強度</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-table"></i>
+                <h5>資料統計展示</h5>
+                <p>結合表格與圖形進行雙重呈現</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-clock-history"></i>
+                <h5>時間趨勢觀察</h5>
+                <p>分析特定時間段內聲量變動</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 按鈕 -->
+        <div class="text-center mt-4">
+          <a href="/trump/" class="btn btn-outline-dark btn-lg">
+            立即前往<i class="bi bi-box-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </section>
+      <!-- 政治人物聲量分析比較 -->
+      <section id="mayor" class="page-section">
+        <h2><i class="bi bi-person-lines-fill me-2"></i>政治人物聲量觀測站</h2>
+
+        <!-- 功能介紹卡片 -->
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>透過新聞報導的篇數與出現次數進行政治人物聲量追蹤，觀察其曝光程度與正負面情緒變化。資料來源涵蓋最近 4 週，依新聞類別與時間軸分析各自的關注度與溫度。</p>
+          <div class="tech-tags mt-2">
+            <span class="tech-tag">所有</span>
+            <span class="tech-tag">聲量比較</span>
+            <span class="tech-tag">情感分析</span>
+            <span class="tech-tag">長條圖</span>
+            <span class="tech-tag">折線趨勢圖</span>
+          </div>
+        </div>
+
+        <!-- 分析維度與功能 -->
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <div class="feature-box">
+              <h4>指標定義</h4>
+              <ul class="feature-list">
+                <li><strong>總篇數：</strong>政治人物在新聞報導中被提及的文章數</li>
+                <li><strong>總次數：</strong>該人物在新聞內文中出現的總次數</li>
+                <li><strong>情緒比例：</strong>分為正面、中立、負面新聞占比</li>
+                <li><strong>新聞分類：</strong>按政治、國際、社會等類型統計聲量</li>
+                <li><strong>時間趨勢：</strong>觀察報導聲量於不同時間點的變化</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-box" style="min-height: 253px;">
+              <h4>功能特色</h4>
+              <ul class="feature-list">
+                <li>整合聲量與情緒變化，提供更全面的輿情觀察。</li>
+                <li>新聞分類分析，輕鬆掌握活躍領域。</li>
+                <li>新聞分類長條圖快速比較報導主題</li>
+                <li>折線圖揭示聲量隨時間的變動趨勢</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 輪播圖展示 -->
+        <div class="visualization-showcase mt-4">
+          <h4 class="text-center mb-3">
+            <i class="bi bi-image me-2"></i>頁面展示
+          </h4>
+
+          <div id="mayorVolumeCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+
+              <div class="carousel-item active">
+                <img src="{% static 'app_poa_introduction/images/Mayor1.png' %}" class="d-block w-100" alt="三人總聲量與情緒比例">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>人物聲量總覽</h5>
+                  <p>川普、賴清德、柯文哲在新聞中的總聲量與情緒占比</p>
+                </div>
+              </div>
+
+              <div class="carousel-item">
+                <img src="{% static 'app_poa_introduction/images/Mayor2.png' %}" class="d-block w-100" alt="分類新聞聲量長條圖">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>聲量新聞分類比較</h5>
+                  <p>比較三位政治人物在哪些新聞類型中最常被報導</p>
+                </div>
+              </div>
+
+              <div class="carousel-item">
+                <img src="{% static 'app_poa_introduction/images/Mayor3.png' %}" class="d-block w-100" alt="三人聲量變化趨勢">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>聲量時間變化</h5>
+                  <p>觀察三人聲量隨時間的變化趨勢，找出關鍵熱區</p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- 輪播指示器 -->
+            <div class="carousel-indicators">
+              <button type="button" data-bs-target="#mayorVolumeCarousel" data-bs-slide-to="0" class="active"></button>
+              <button type="button" data-bs-target="#mayorVolumeCarousel" data-bs-slide-to="1"></button>
+              <button type="button" data-bs-target="#mayorVolumeCarousel" data-bs-slide-to="2"></button>
+            </div>
+
+            <!-- 控制箭頭 -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#mayorVolumeCarousel"
+              data-bs-slide="prev">
+              <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#mayorVolumeCarousel"
+              data-bs-slide="next">
+              <span class="carousel-control-next-icon"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 應用場景 -->
+        <div class="application-scenarios mt-5">
+          <h4>應用場景</h4>
+          <div class="row text-center">
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-award"></i>
+                <h5>人氣比較</h5>
+                <p>各政治人物曝光度與情緒反應</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-diagram-3"></i>
+                <h5>類別分布</h5>
+                <p>聲量在哪些主題分類出現最多</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-activity"></i>
+                <h5>動態變化</h5>
+                <p>追蹤新聞曝光的高峰與下滑期</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 查看詳情按鈕 -->
+        <div class="text-center mt-4">
+          <a href="/" class="btn btn-outline-dark btn-lg">
+            立即前往<i class="bi bi-box-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </section>
+    </div>
+
+
+
+    <!-- 104人力銀行內容 -->
+    <div id="job" class="tab-pane">
+      <div class="project-description" style="line-height: 2;">
+        <p>透過爬蟲技術分析人力銀行<strong>(104)</strong>職缺資訊，深入探索就業市場趨勢與需求。</p>
+        <p><strong>五類：</strong>前端工程師、數據分析師、AI工程師、網路管理工程師、雲端工程師。</p>
+      </div>
+
+      <section id="crawler_intro" class="page-section">
+        <h2><i class="bi bi-code-slash me-2"></i>爬蟲與斷詞流程介紹</h2>
+
+        <!-- 功能概述 -->
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>
+            本系統透過三階段流程：<strong>職缺資料擷取 → 中文斷詞處理 → 關鍵詞統計分析</strong>，自動化擷取與理解
+            <strong>104 人力銀行</strong> 職缺網頁內容。分析結果應用於技能詞彙擷取、特質分類、薪資條件分析等模組，協助使用者掌握就業趨勢與職場需求。
+          </p>
+        </div>
+
+        <!-- 手風琴區塊 -->
+        <div class="accordion mt-5" id="crawlerAccordion">
+          <h4>詳細介紹</h4>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseOne">
+                階段一：職缺資料擷取
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#crawlerAccordion">
+              <div class="accordion-body">
+                使用 <code>Selenium</code> 模擬瀏覽器動作，自動滑動與翻頁擷取 JSON/HTML，再透過 <code>requests</code> 與
+                <code>BeautifulSoup</code> 解析職缺內容欄位。
+                <ul>
+                  <li>模擬點擊與載入（Selenium）</li>
+                  <li>遍歷多職類與分頁</li>
+                  <li>擷取職稱、薪資、福利等欄位</li>
+                  <li>儲存為 Pandas DataFrame / CSV</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseTwo">
+                階段二：中文斷詞與詞性標註
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#crawlerAccordion">
+              <div class="accordion-body">
+                透過 <code>CKIPTagger</code> 對職缺說明進行繁體中文斷詞與詞性標註，篩選出具代表性的動詞與名詞。
+                <ul>
+                  <li>CKIP 分詞 → 拆解句子為詞組</li>
+                  <li>詞性標註 → 萃取動詞與名詞</li>
+                  <li>建立職缺關鍵詞清單</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseThree">
+                階段三：關鍵詞統計與應用
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#crawlerAccordion">
+              <div class="accordion-body">
+                統計職缺中關鍵詞的詞頻，搭配 <code>TF-IDF</code> 權重計算代表性詞彙，並對應至技能、特質、條件進行分類視覺化。
+                <ul>
+                  <li>Counter 計算詞頻</li>
+                  <li>TF-IDF 分析代表詞</li>
+                  <li>詞彙分類與圖表呈現</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 流程圖 -->
+        <h2 class="flow-title">
+          <i class="bi bi-diagram-3 me-2"></i>流程圖
+        </h2>
+        <div class="grid-flow">
+          <!-- 第一列 -->
+          <div class="flow-box">
+            <i class="bi bi-browser-chrome"></i>
+            模擬瀏覽器操作<br><small>Selenium</small>
+          </div>
+          <div class="arrow-h">➡<span>動態載入頁面</span></div>
+          <div class="flow-box">
+            <i class="bi bi-diagram-3"></i>
+            職缺資料擷取<br><small>requests / BeautifulSoup</small>
+          </div>
+          <div class="arrow-h">➡<span>文字欄位清洗</span></div>
+          <div class="flow-box">
+            <i class="bi bi-translate"></i>
+            分詞 + 詞性標註<br><small>CKIPTagger</small>
+          </div>
+
+          <!-- 第二列 -->
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div class="arrow-v">⬇<span>取得詞性清單</span></div>
+
+          <!-- 第三列 -->
+          <div class="flow-box">
+            <i class="bi bi-bar-chart-line"></i>
+            視覺化輸出<br><small>WordCloud / Chart</small>
+          </div>
+          <div class="arrow-h">⬅<span>TF-IDF 分數</span></div>
+          <div class="flow-box">
+            <i class="bi bi-funnel"></i>
+            詞彙分類<br><small>技能 / 特質 / 條件</small>
+          </div>
+          <div class="arrow-h">⬅<span>詞性篩選</span></div>
+          <div class="flow-box">
+            <i class="bi bi-sliders"></i>
+            詞性過濾<br><small>名詞 / 動詞</small>
+          </div>
+        </div>
+      </section>
+
+
+
+      <!-- 職缺詳情分析 -->
+      <section id="job_detail" class="page-section">
+        <h2><i class="bi bi-geo-alt-fill me-2"></i>地區職缺分析</h2>
+
+        <!-- 功能概述 -->
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>整合全台職缺資訊，透過互動式地圖與清單展示，使用者可依據地區與職業類別，快速掌握全台各地的就業熱點與具體職缺內容。</p>
+          <div class="tech-tags mt-2">
+            <span class="tech-tag">#職缺地圖</span>
+            <span class="tech-tag">#就業熱區</span>
+            <span class="tech-tag">#工作詳情</span>
+          </div>
+        </div>
+
+        <!-- 功能特色 -->
+        <div class="row mt-4">
+          <div class="col-md-12">
+            <div class="feature-box">
+              <h4>功能特色</h4>
+              <ul class="feature-list">
+                <li><strong>快速掌握熱區：</strong> 立即看見哪裡職缺最多，像是台北或高雄。</li>
+                <li><strong>職類篩選方便：</strong> 可切換「前端」、「AI」、「資安」等職類，迅速聚焦。</li>
+                <li><strong>點地區看詳情：</strong> 點選地圖上的地區就能看到該地所有職缺清單。</li>
+                <li><strong>資訊清楚分類：</strong> 每筆職缺都有類別、技能、薪資、學經歷條件。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 應用場景 -->
+        <div class="application-scenarios mt-5">
+          <h4 class="text-center">
+            <i class="bi bi-grid me-2"></i>應用場景
+          </h4>
+          <div class="row justify-content-center">
+            <div class="col-md-3">
+              <div id="job" class="scenario-card">
+                <i class="bi bi-house-door"></i>
+                <h5>在地找工作</h5>
+                <p>查看目標地區的職缺情況</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div id="job" class="scenario-card">
+                <i class="bi bi-layers"></i>
+                <h5>比較不同職類</h5>
+                <p>比較各地職缺類別</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div id="job" class="scenario-card">
+                <i class="bi bi-graph-up"></i>
+                <h5>職場熱度追蹤</h5>
+                <p>了解各區人才需求趨勢</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div id="job" class="scenario-card">
+                <i class="bi bi-building"></i>
+                <h5>企業決策參考</h5>
+                <p>據點與市場評估依據</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 詳細介紹 -->
+        <div class="visualization-showcase mt-5">
+          <h4 class="text-center mb-4">
+            <i class="bi bi-image me-2"></i>頁面展示
+          </h4>
+
+          <div class="showcase-wrapper">
+            <!-- 圖一 左圖右文 -->
+            <div class="row align-items-center mb-5 showcase-item">
+              <div class="col-md-6">
+                <div class="fixed-image-wrapper">
+                  <img src="{% static 'app_poa_introduction/images/area_analysis1.png' %}"
+                    class="fixed-image hover-shadow" alt="職缺地圖視覺化">
+                </div>
+              </div>
+              <div class="col-md-6 showcase-content">
+                <div class="content-box">
+                  <h5 class="mb-3"><i class="bi bi-geo-alt me-2"></i>職缺地圖視覺化</h5>
+                  <p class="lead mb-0">全台地圖上直觀掌握各縣市的職缺熱度與分佈。讓您輕鬆了解不同地區的就業機會。</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 圖二 右圖左文 -->
+            <div class="row align-items-center mb-5 flex-md-row-reverse showcase-item">
+              <div class="col-md-6">
+                <div class="fixed-image-wrapper">
+                  <img src="{% static 'app_poa_introduction/images/area_analysis2.png' %}"
+                    class="fixed-image hover-shadow" alt="地區分類職缺列表">
+                </div>
+              </div>
+              <div class="col-md-6 showcase-content">
+                <div class="content-box">
+                  <h5 class="mb-3"><i class="bi bi-list-ul me-2"></i>地區分類職缺列表</h5>
+                  <p class="lead mb-0">依照所選地區顯示所有職缺，清楚分類與筆數總覽。方便快速瀏覽感興趣的工作機會。</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 圖三 左圖右文 -->
+            <div class="row align-items-center mb-5 showcase-item">
+              <div class="col-md-6">
+                <div class="fixed-image-wrapper">
+                  <img src="{% static 'app_poa_introduction/images/area_analysis3.png' %}"
+                    class="fixed-image hover-shadow" alt="單筆職缺詳細介紹">
+                </div>
+              </div>
+              <div class="col-md-6 showcase-content">
+                <div class="content-box">
+                  <h5 class="mb-3"><i class="bi bi-file-text me-2"></i>單筆職缺詳細介紹</h5>
+                  <p class="lead mb-0">點擊展開可查閱完整職缺資訊，包含工作內容、條件與福利。透明完整的資訊助您做出最佳選擇。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-4">
+          <a href="/104/area_analysis/" class="btn btn-outline-dark btn-lg">
+            立即前往<i class="bi bi-box-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </section>
+
+      <!-- 熱門關鍵字分析 -->
+      <section id="hot_keywords" class="page-section">
+        <h2><i class="bi bi-tags-fill me-2"></i>熱門關鍵字分析</h2>
+
+        <!-- 功能概述 -->
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>在求職市場中，職缺描述中的關鍵字透露了企業對人才的期望與重視技能。本分析統整了各職業類別中的熱門關鍵字，揭示職場趨勢，協助使用者快速掌握職場需求。</p>
+          <div class="tech-tags mt-2">
+            <span class="tech-tag">#職業類別選擇</span>
+            <span class="tech-tag">#關鍵字統計</span>
+            <span class="tech-tag">#熱門排名</span>
+            <span class="tech-tag">#堆疊長條圖</span>
+          </div>
+        </div>
+
+        <!-- 功能特色 -->
+        <div class="row mt-4">
+          <div class="col-md-12">
+            <div class="feature-box">
+              <h4>功能特色</h4>
+              <ul class="feature-list">
+                <li><strong>熱門關鍵字自訂：</strong> 可設定顯示前N大關鍵字，了解整體市場關注。</li>
+                <li><strong>個別職業觀察：</strong> 聚焦單一職業，掌握專屬技能需求。</li>
+                <li><strong>視覺化呈現：</strong> 圖表形式呈現關鍵字差異，便於快速比較。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 應用場景 -->
+        <div class="application-scenarios mt-5">
+          <h4 class="text-center"><i class="bi bi-grid me-2"></i>應用場景</h4>
+          <div class="row justify-content-center">
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-card-text"></i>
+                <h5>準備履歷</h5>
+                <p>參考熱門關鍵字強化履歷用語</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-chat-right-text"></i>
+                <h5>面試準備</h5>
+                <p>了解常見關鍵字對應技能，面試更有信心</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-bar-chart-line"></i>
+                <h5>市場觀測</h5>
+                <p>掌握關鍵字變化趨勢，把握學習方向</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-search"></i>
+                <h5>職涯探索</h5>
+                <p>從不同職業關鍵字中，找出最適合你的方向</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 視覺展示區 -->
+        <div class="visualization-showcase mt-5">
+          <h4 class="text-center mb-4">
+            <i class="bi bi-image me-2"></i>頁面展示
+          </h4>
+
+          <div class="showcase-wrapper">
+
+            <!-- 圖一 左圖右文 -->
+            <div class="row align-items-center mb-5 showcase-item">
+              <div class="col-md-6">
+                <div class="fixed-image-wrapper">
+                  <img src="{% static 'app_poa_introduction/images/top_keyword1.png' %}"
+                    class="fixed-image hover-shadow" alt="熱門關鍵字自訂查詢">
+                </div>
+              </div>
+              <div class="col-md-6 showcase-content">
+                <div class="content-box">
+                  <h5 class="mb-3"><i class="bi bi-sliders2 me-2"></i>熱門關鍵字自訂查詢</h5>
+                  <p class="lead mb-0">可依職業類別與關鍵字數量篩選，快速掌握需求重點。</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 圖二 右圖左文 -->
+            <div class="row align-items-center mb-5 flex-md-row-reverse showcase-item">
+              <div class="col-md-6">
+                <div class="fixed-image-wrapper">
+                  <img src="{% static 'app_poa_introduction/images/top_keyword2.png' %}"
+                    class="fixed-image hover-shadow" alt="熱門關鍵字表格">
+                </div>
+              </div>
+              <div class="col-md-6 showcase-content">
+                <div class="content-box">
+                  <h5 class="mb-3"><i class="bi bi-table me-2"></i>熱門關鍵字表格</h5>
+                  <p class="lead mb-0">統整出現次數最高的前N個關鍵字，揭示整體職場需求趨勢。</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 圖三與圖四：輪播 左圖右文 -->
+            <div class="row align-items-center mb-5 showcase-item">
+              <div class="col-md-6">
+                <div class="visualization-showcase">
+
+                  <div id="keywordCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <!-- 圖片區 -->
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        <img src="{% static 'app_poa_introduction/images/top_keyword3.png' %}"
+                          class="d-block w-100 fixed-image" alt="所有職業堆疊圖">
+                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                          <h5>所有職業堆疊圖</h5>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <img src="{% static 'app_poa_introduction/images/top_keyword4.png' %}"
+                          class="d-block w-100 fixed-image" alt="單一職業長條圖">
+                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                          <h5>單一職業長條圖</h5>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 指示器（點點） -->
+                    <div class="carousel-indicators">
+                      <button type="button" data-bs-target="#keywordCarousel" data-bs-slide-to="0" class="active"
+                        aria-label="Slide 1"></button>
+                      <button type="button" data-bs-target="#keywordCarousel" data-bs-slide-to="1"
+                        aria-label="Slide 2"></button>
+                    </div>
+
+                    <!-- 控制箭頭 -->
+                    <button class="carousel-control-prev" type="button" data-bs-target="#keywordCarousel"
+                      data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#keywordCarousel"
+                      data-bs-slide="next">
+                      <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- 說明區 -->
+              <div class="col-md-6 showcase-content">
+                <div class="content-box">
+                  <h5 class="mb-3"><i class="bi bi-bar-chart-steps me-2"></i>熱門關鍵字視覺比較</h5>
+                  <p class="lead mb-0">視覺化比較不同職業在熱門關鍵字上的需求差異，協助精準定位職涯方向。</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 前往功能按鈕 -->
+        <div class="text-center mt-4">
+          <a href="/104/top_keyword/" class="btn btn-outline-dark btn-lg">
+            立即前往<i class="bi bi-box-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </section>
+
+      <!-- 關鍵字趨勢分析區塊 -->
+      <section class="page-section" id="keyword_trends">
+        <h2><i class="bi bi-graph-up-arrow me-2"></i>關鍵字趨勢分析</h2>
+
+        <!-- 功能概述 -->
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>使用者可輸入自訂關鍵字，進行職缺中關鍵詞的出現次數與趨勢分析，協助掌握市場需求熱度與變化。</p>
+          <div class="tech-tags mt-2">
+            <span class="tech-tag">#關鍵字查詢</span>
+            <span class="tech-tag">#職缺數比較</span>
+            <span class="tech-tag">#職業需求分析</span>
+            <span class="tech-tag">#時間趨勢</span>
+          </div>
+        </div>
+
+        <!-- 功能特色 -->
+        <div class="row mt-4">
+          <div class="col-md-12">
+            <div class="feature-box">
+              <h4>功能特色</h4>
+              <ul class="feature-list">
+                <li><strong>彈性查詢：</strong> 自訂關鍵字搜尋，對應不同職場技能需求。</li>
+                <li><strong>對比分析：</strong> 提供職缺總量與關鍵字出現次數的整合視圖。</li>
+                <li><strong>趨勢判讀：</strong> 呈現時間軸分析，洞察關鍵字熱度變化。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 應用場景 -->
+        <div class="application-scenarios mt-5">
+          <h4 class="text-center"><i class="bi bi-grid me-2"></i>應用場景</h4>
+          <div class="row justify-content-center">
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-graph-up"></i>
+                <h5>市場趨勢追蹤</h5>
+                <p>觀察特定技術在職場中的熱度變化</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-bullseye"></i>
+                <h5>精準行銷</h5>
+                <p>HR/平台優化職缺關鍵詞與曝光策略</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="scenario-card">
+                <i class="bi bi-person-check"></i>
+                <h5>技能投資參考</h5>
+                <p>協助個人決定是否投入或學習該技能</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 頁面展示 -->
+        <h4 class="text-center mb-4">
+          <i class="bi bi-image me-2"></i>頁面展示
+        </h4>
+        <div class="visualization-showcase p-4 rounded shadow-sm"
+          style="margin-top: 5px; background: linear-gradient(135deg, #f7f3ef, rgb(236, 225, 228));">
+
+          <div class="row align-items-center mb-5 showcase-item">
+            <div class="col-md-6">
+              <div class="fixed-image-wrapper">
+                <img src="{% static 'app_poa_introduction/images/search_keyword1.png' %}"
+                  class="fixed-image hover-shadow" alt="自訂條件靈活查詢">
+              </div>
+            </div>
+            <div class="col-md-6 showcase-content">
+              <div class="content-box">
+                <h5 class="mb-3"><i class="bi bi-search me-2"></i>自訂條件靈活查詢</h5>
+                <p class="lead mb-0">輸入關鍵字與條件即可篩選出與職缺高度關聯的提及資料。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 圖二：右圖左文 -->
+          <div class="row align-items-center mb-5 flex-md-row-reverse showcase-item">
+            <div class="col-md-6">
+              <div class="fixed-image-wrapper">
+                <img src="{% static 'app_poa_introduction/images/search_keyword2.png' %}"
+                  class="fixed-image hover-shadow" alt="職缺與提及數對比圖">
+              </div>
+            </div>
+            <div class="col-md-6 showcase-content">
+              <div class="content-box">
+                <h5 class="mb-3"><i class="bi bi-bar-chart me-2"></i>職缺與提及數對比圖</h5>
+                <p class="lead mb-0">比較輸入關鍵字在不同職業中的提及頻率與實際職缺數差距。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 圖三：左圖右文 -->
+          <div class="row align-items-center mb-4 showcase-item">
+            <div class="col-md-6">
+              <div class="fixed-image-wrapper">
+                <img src="{% static 'app_poa_introduction/images/search_keyword3.png' %}"
+                  class="fixed-image hover-shadow" alt="關鍵字熱度時間趨勢">
+              </div>
+            </div>
+            <div class="col-md-6 showcase-content">
+              <div class="content-box">
+                <h5 class="mb-3"><i class="bi bi-clock-history me-2"></i>關鍵字熱度時間趨勢</h5>
+                <p class="lead mb-0">觀察指定關鍵字在近期職缺中的出現趨勢與變動幅度。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 前往功能按鈕 -->
+        <div class="text-center mt-4">
+          <a href="/104/search_keyword/" class="btn btn-outline-dark btn-lg">
+            立即前往<i class="bi bi-box-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </section>
+
+      <section id="salary_analysis" class="page-section">
+        <h2><i class="bi bi-cash-coin me-2"></i>薪資分析</h2>
+
+        <!-- 功能概述 -->
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>
+            透過互動式台灣地圖與職業薪資分析，使用者可快速掌握各地區職缺數量分布與不同職類的平均薪資，有效輔助求職地點與待遇評估。
+          </p>
+          <div class="tech-tags mt-2">
+            <span class="tech-tag">#職缺地圖</span>
+            <span class="tech-tag">#平均薪資</span>
+            <span class="tech-tag">#職缺數量</span>
+            <span class="tech-tag">#就業熱區</span>
+            <span class="tech-tag">#待遇比較</span>
+          </div>
+        </div>
+
+        <!-- 功能特色 -->
+        <div class="row mt-4">
+          <div class="col-md-12">
+            <div class="feature-box">
+              <h4>功能特色</h4>
+              <ul class="feature-list">
+                <li><strong>整合視覺資訊：</strong>結合地圖與薪資，提供一站式比較工具。</li>
+                <li><strong>揭示熱區：</strong>顯示各縣市職缺密度，找出熱門就業地區。</li>
+                <li><strong>地點對應薪資：</strong>根據城市顯示各職類平均薪資，揭示地區待遇差異。</li>
+                <li><strong>職涯規劃依據：</strong>提供更具地理精度的職涯與遷徙參考。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 應用場景 -->
+        <div class="application-scenarios mt-5">
+          <h4 class="text-center"><i class="bi bi-grid me-2"></i>應用場景</h4>
+          <div class="row justify-content-center">
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-map"></i>
+                <h5>地區選擇</h5>
+                <p>評估不同地區的職缺量與待遇是否符合期望</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-arrow-left-right"></i>
+                <h5>職業轉換</h5>
+                <p>探索同職位在不同城市的待遇差異</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-mortarboard"></i>
+                <h5>畢業規劃</h5>
+                <p>協助新鮮人依據地點與趨勢選擇職涯起點</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-bar-chart-steps"></i>
+                <h5>地方發展分析</h5>
+                <p>企業或學者掌握人才與薪資地理分布</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="text-center mb-4"><i class="bi bi-image me-2"></i>頁面展示</h4>
+        <!-- 頁面展示 -->
+        <div class="visualization-showcase p-4 rounded shadow-sm"
+          style="margin-top: 5px; background: linear-gradient(135deg, #f7f3ef, rgb(236, 225, 228));">
+
+          <!-- 圖一：左圖右文 -->
+          <div class="row align-items-center mb-5 showcase-item">
+            <div class="col-md-6">
+              <div class="fixed-image-wrapper">
+                <img src="{% static 'app_poa_introduction/images/salary_analysis1.png' %}"
+                  class="fixed-image hover-shadow" alt="台灣職缺地區分布">
+              </div>
+            </div>
+            <div class="col-md-6 showcase-content">
+              <div class="content-box">
+                <h5 class="mb-3"><i class="bi bi-map-fill me-2"></i>台灣職缺地區分布</h5>
+                <p class="lead mb-0">以互動地圖方式呈現各縣市的職缺總量，揭示求職熱區與人力需求集中地。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 圖二：右圖左文 -->
+          <div class="row align-items-center mb-4 flex-md-row-reverse showcase-item">
+            <div class="col-md-6">
+              <div class="fixed-image-wrapper">
+                <img src="{% static 'app_poa_introduction/images/salary_analysis2.png' %}"
+                  class="fixed-image hover-shadow" alt="該地區職業類別平均薪資">
+              </div>
+            </div>
+            <div class="col-md-6 showcase-content">
+              <div class="content-box">
+                <h5 class="mb-3"><i class="bi bi-currency-dollar me-2"></i>該地區職業類別平均薪資</h5>
+                <p class="lead mb-0">呈現該地區不同職業的平均薪資，協助使用者評估待遇與地點的匹配度。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 前往功能按鈕 -->
+        <div class="text-center mt-4">
+          <a href="/104/salary_analysis/" class="btn btn-outline-dark btn-lg">
+            立即前往<i class="bi bi-box-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </section>
+
+      <section id="skills_analysis" class="page-section">
+        <h2><i class="bi bi-tools me-2"></i>擅長工具分析</h2>
+
+        <!-- 功能概述 -->
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>
+            從不同職業類別的職缺中提取關鍵技術詞彙，以視覺化方式呈現常見工具與技能，有助於掌握職場技能趨勢與補強方向。
+          </p>
+          <div class="tech-tags mt-2">
+            <span class="tech-tag">#熱門工具</span>
+            <span class="tech-tag">#職能視覺化</span>
+            <span class="tech-tag">#跨職業比較</span>
+            <span class="tech-tag">#字雲圖</span>
+            <span class="tech-tag">#泡泡圖</span>
+          </div>
+        </div>
+
+        <!-- 功能特色 -->
+        <div class="row mt-4">
+          <div class="col-md-12">
+            <div class="feature-box">
+              <h4>功能特色</h4>
+              <ul class="feature-list">
+                <li><strong>技能需求聚焦：</strong>提供不同職業的技能需求，明確標示常用技術工具</li>
+                <li><strong>互動設定：</strong>支援字詞數量與職業選擇的動態調整</li>
+                <li><strong>視覺化效果：</strong>使用文字雲與泡泡圖，強化辨識與比較效果</li>
+                <li><strong>快速掌握技能組合：</strong>幫助使用者了解職缺所需技能，便於學習規劃與履歷補強</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 應用場景 -->
+        <div class="application-scenarios mt-5">
+          <h4 class="text-center"><i class="bi bi-grid me-2"></i>應用場景</h4>
+          <div class="row justify-content-center">
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-journal-code"></i>
+                <h5>學習規劃</h5>
+                <p>依熱門工具決定技能學習優先順序</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-file-earmark-person"></i>
+                <h5>求職準備</h5>
+                <p>確認履歷中是否涵蓋常見關鍵技能</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-arrow-repeat"></i>
+                <h5>轉職參考</h5>
+                <p>觀察不同職位對技能工具的重疊與差異</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-bar-chart-line"></i>
+                <h5>市場分析</h5>
+                <p>HR 或教學機構可優化培訓內容</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 頁面展示 -->
+        <h4 class="text-center mb-4"><i class="bi bi-image me-2"></i>頁面展示</h4>
+        <div class="visualization-showcase p-4 rounded shadow-sm"
+          style="margin-top: 5px; background: linear-gradient(135deg, #f7f3ef, rgb(236, 225, 228));">
+
+          <!-- 圖一：左圖右文 -->
+          <div class="row align-items-center mb-5 showcase-item">
+            <div class="col-md-6">
+              <div class="fixed-image-wrapper">
+                <img src="{% static 'app_poa_introduction/images/tool_analysis1.png' %}"
+                  class="fixed-image hover-shadow" alt="分析條件設定">
+              </div>
+            </div>
+            <div class="col-md-6 showcase-content">
+              <div class="content-box">
+                <h5 class="mb-3"><i class="bi bi-sliders me-2"></i>分析條件設定</h5>
+                <p class="lead mb-0">可依職業類別與字詞數量自由篩選，精準鎖定技能需求焦點。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 圖二：右圖左文 -->
+          <div class="row align-items-center mb-5 flex-md-row-reverse showcase-item">
+            <div class="col-md-6">
+              <div class="fixed-image-wrapper">
+                <img src="{% static 'app_poa_introduction/images/tool_analysis2.png' %}"
+                  class="fixed-image hover-shadow" alt="技術工具文字雲（單職業）">
+              </div>
+            </div>
+            <div class="col-md-6 showcase-content">
+              <div class="content-box">
+                <h5 class="mb-3"><i class="bi bi-cloud-word me-2"></i>技術工具文字雲（單職業）</h5>
+                <p class="lead mb-0">以文字雲方式呈現該職業類別常見技能詞彙，直觀展現熱門工具的出現頻率。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 圖三：左圖右文 -->
+          <div class="row align-items-center mb-4 showcase-item">
+            <div class="col-md-6">
+              <div class="fixed-image-wrapper">
+                <img src="{% static 'app_poa_introduction/images/tool_analysis3.png' %}"
+                  class="fixed-image hover-shadow" alt="技術工具泡泡圖（跨職業）">
+              </div>
+            </div>
+            <div class="col-md-6 showcase-content">
+              <div class="content-box">
+                <h5 class="mb-3"><i class="bi bi-scatter-chart me-2"></i>技術工具泡泡圖（跨職業）</h5>
+                <p class="lead mb-0">透過顏色與泡泡大小區分所有職業類別的技能需求，清楚呈現各職位技能的重疊與差異。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <a href="/104/tool_analysis/" class="btn btn-outline-dark btn-lg">
+            立即前往<i class="bi bi-box-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </section>
+      <section id="personal_condition" class="page-section">
+        <h2><i class="bi bi-person-vcard me-2"></i>個人條件分析</h2>
+
+        <!-- 功能概述 -->
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>
+            透過交互式選單切換「經歷」與「學歷」條件，深入分析它們對職缺數與薪資的影響，幫助使用者看見不同背景條件下的就業趨勢與待遇落差，作為求職與職涯規劃的重要參考。
+          </p>
+          <div class="tech-tags mt-2">
+            <span class="tech-tag">#工作經驗</span>
+            <span class="tech-tag">#學歷要求</span>
+            <span class="tech-tag">#平均薪資</span>
+            <span class="tech-tag">#職缺統計</span>
+            <span class="tech-tag">#交叉分析</span>
+            <span class="tech-tag">#圓餅圖</span>
+            <span class="tech-tag">#長條圖</span>
+          </div>
+        </div>
+
+        <!-- 功能特色 -->
+        <div class="row mt-4">
+          <div class="col-md-12">
+            <div class="feature-box">
+              <h4>功能特色</h4>
+              <ul class="feature-list">
+                <li><strong>X/Y 軸靈活切換：</strong>自由選擇經歷或學歷對應職缺數或薪資</li>
+                <li><strong>雙圖對照：</strong>圓餅圖與長條圖同步呈現資料結構與數量分布</li>
+                <li><strong>量化差異：</strong>呈現不同條件下的薪資與就業情況</li>
+                <li><strong>求職與教育決策參考：</strong>幫助找工作、轉職、進修者評估背景效益</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 應用場景 -->
+        <div class="application-scenarios mt-5">
+          <h4 class="text-center"><i class="bi bi-grid me-2"></i>應用場景</h4>
+          <div class="row justify-content-center">
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-person-lines-fill"></i>
+                <h5>生涯規劃</h5>
+                <p>根據自身學歷與經歷背景，評估市場機會</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-currency-dollar"></i>
+                <h5>投資報酬評估</h5>
+                <p>判斷是否該進修、跳槽或轉換跑道</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-bar-chart-steps"></i>
+                <h5>市場洞察</h5>
+                <p>掌握職場學歷與年資偏好，預測趨勢</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-mortarboard-fill"></i>
+                <h5>教育規劃</h5>
+                <p>協助設計補教與訓練機構的課程方向</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="text-center mb-4"><i class="bi bi-image me-2"></i>頁面展示</h4>
+        <div class="visualization-showcase p-4 rounded shadow-sm"
+          style="margin-top: 5px; background: linear-gradient(135deg, #f7f3ef, rgb(236, 225, 228));">
+
+          <!-- 圖一：左圖右文 -->
+          <div class="row align-items-center mb-5 showcase-item">
+            <div class="col-md-6">
+              <img src="{% static 'app_poa_introduction/images/conditional_analysis1.png' %}"
+                class="fixed-image hover-shadow" alt="條件分析篩選">
+            </div>
+            <div class="col-md-6">
+              <div class="content-box">
+                <h5><i class="bi bi-sliders2-vertical me-2"></i>條件分析篩選</h5>
+                <p class="lead mb-0">可自由設定職業類別與 X/Y 軸分析維度，對應圖表同步更新。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 圖二三：輪播左字右圖 -->
+          <div class="row align-items-center mb-5 showcase-item">
+            <!-- 左側：文字 -->
+            <div class="col-md-6">
+              <div class="content-box">
+                <h5><i class="bi bi-bar-chart-steps me-2"></i>經歷與學歷對職缺數的影響</h5>
+                <p class="lead mb-0">呈現不同經歷與學歷條件對職缺數的分布情況，揭示市場最常見的徵才條件。</p>
+              </div>
+            </div>
+
+            <!-- 右側：輪播圖 -->
+            <div class="col-md-6">
+              <div class="visualization-showcase">
+                <div id="jobCountCarousel" class="carousel slide" data-bs-ride="carousel">
+                  <!-- 圖片內容 -->
+                  <div class="carousel-inner">
+                    <div class="carousel-item active">
+                      <img src="{% static 'app_poa_introduction/images/conditional_analysis2.png' %}"
+                        class="d-block w-100 fixed-image" alt="經歷條件對職缺數的影響">
+                      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                        <h5>大部分公司對經歷沒有要求</h5>
+                      </div>
+                    </div>
+                    <div class="carousel-item">
+                      <img src="{% static 'app_poa_introduction/images/conditional_analysis3.png' %}"
+                        class="d-block w-100 fixed-image" alt="學歷條件對職缺數的影響">
+                      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                        <h5>大學以上的學歷是現在最基本的</h5>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 輪播指示器 -->
+                  <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#jobCountCarousel" data-bs-slide-to="0" class="active"
+                      aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#jobCountCarousel" data-bs-slide-to="1"
+                      aria-label="Slide 2"></button>
+                  </div>
+
+                  <!-- 輪播控制箭頭 -->
+                  <button class="carousel-control-prev" type="button" data-bs-target="#jobCountCarousel"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#jobCountCarousel"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 圖四五：輪播左圖右文 -->
+          <div class="row align-items-center mb-5 showcase-item">
+            <div class="col-md-6">
+              <div class="visualization-showcase">
+                <div id="salaryEffectCarousel" class="carousel slide" data-bs-ride="carousel">
+                  <!-- 圖片區 -->
+                  <div class="carousel-inner">
+                    <div class="carousel-item active">
+                      <img src="{% static 'app_poa_introduction/images/conditional_analysis4.png' %}"
+                        class="d-block w-100 fixed-image" alt="經歷條件對平均薪資的影響">
+                      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                        <h5>經歷越高薪資越高</h5>
+                      </div>
+                    </div>
+                    <div class="carousel-item">
+                      <img src="{% static 'app_poa_introduction/images/conditional_analysis5.png' %}"
+                        class="d-block w-100 fixed-image" alt="學歷條件對平均薪資的影響">
+                      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                        <h5>博士的薪資最高</h5>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 輪播指示器 -->
+                  <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#salaryEffectCarousel" data-bs-slide-to="0" class="active"
+                      aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#salaryEffectCarousel" data-bs-slide-to="1"
+                      aria-label="Slide 2"></button>
+                  </div>
+
+                  <!-- 輪播控制箭頭 -->
+                  <button class="carousel-control-prev" type="button" data-bs-target="#salaryEffectCarousel"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#salaryEffectCarousel"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="content-box">
+                <h5><i class="bi bi-currency-dollar me-2"></i>經歷與學歷對平均薪資的影響</h5>
+                <p class="lead mb-0">統計不同經歷與學歷的平均薪資表現，幫助理解各條件在職場待遇上的影響。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-4">
+          <a href="/104/conditional_analysis/" class="btn btn-outline-dark btn-lg">
+            立即前往<i class="bi bi-box-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </section>
+
+
+      <!-- 個人特質分析頁面 -->
+      <section id="personality_analysis" class="page-section">
+        <h2><i class="bi bi-person-badge me-2"></i>個人特質分析</h2>
+
+        <!-- 功能概述卡片 -->
+        <div class="feature-box highlight-box">
+          <h4>功能概述</h4>
+          <p>從職缺文字中擷取出代表軟性特質的詞彙，並統整出各職業對不同軟性能力的需求差異，協助求職者理解企業在個人特質上的期待。</p>
+          <div class="tech-tags">
+            <span class="tech-tag">#軟性特質</span>
+            <span class="tech-tag">#職業特質分布</span>
+            <span class="tech-tag">#雷達圖</span>
+            <span class="tech-tag">#文字雲</span>
+          </div>
+        </div>
+
+        <!-- 功能特色 -->
+        <div class="row mt-4">
+          <div class="col-md-12">
+            <div class="feature-box">
+              <h4>功能特色</h4>
+              <ul class="feature-list">
+                <li><strong>軟性關鍵詞擷取：</strong>從職缺內容分析代表個人特質的常見詞彙</li>
+                <li><strong>五大特質分類：</strong>溝通協作力、問題解決力、穩定專注力、創新思維力、主動進取力</li>
+                <li><strong>詞典式比對法：</strong>預先定義的五大特質詞庫，從職缺內容中比對並擷取關鍵詞，分析其個人特質傾向</li>
+                <li><strong>雙圖呈現：</strong>文字雲與雷達圖雙重視覺化呈現特質分布與差異</li>
+                <li><strong>跨職業比較：</strong>觀察不同職位在特質重視程度上的差異性</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 應用場景 -->
+        <div class="application-scenarios mt-5">
+          <h4 class="text-center"><i class="bi bi-grid me-2"></i>應用場景</h4>
+          <div class="row justify-content-center">
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-person-check-fill"></i>
+                <h5>面試準備</h5>
+                <p>根據職業特質強化面試中的特質表現與說明</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-file-earmark-text-fill"></i>
+                <h5>履歷撰寫</h5>
+                <p>嵌入職缺偏好的特質詞彙，提升履歷吸引力</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-briefcase-fill"></i>
+                <h5>職涯探索</h5>
+                <p>了解不同職缺看重哪些特質，選擇更合適的方向</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="scenario-card">
+                <i class="bi bi-people-fill"></i>
+                <h5>人才分析</h5>
+                <p>幫助企業比對人才特質與組織文化的契合度</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 軟性特質詞典式比對關鍵字 區塊 -->
+        <!-- 標題 -->
+        <h4 class="text-center mt-5 mb-4">軟性特質詞典式比對關鍵字</h4>
+
+        <!-- 手風琴區塊 -->
+        <div class="accordion" id="traitAccordion">
+
+          <!-- 溝通協作力 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="heading1">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
+                溝通協作力
+              </button>
+            </h2>
+            <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1"
+              data-bs-parent="#traitAccordion">
+              <div class="accordion-body">
+                <span class="trait-tag">溝通</span> <span class="trait-tag">表達</span> <span class="trait-tag">協調</span>
+                <span class="trait-tag">團隊合作</span>
+                <span class="trait-tag">分享</span> <span class="trait-tag">說明</span> <span class="trait-tag">交流</span>
+                <span class="trait-tag">討論</span>
+                <span class="trait-tag">傾聽</span> <span class="trait-tag">互動</span> <span class="trait-tag">團隊</span>
+                <span class="trait-tag">合作</span>
+                <span class="trait-tag">協作</span> <span class="trait-tag">表現力</span> <span class="trait-tag">參與</span>
+                <span class="trait-tag">配合度</span>
+                <span class="trait-tag">部門</span> <span class="trait-tag">關係</span> <span class="trait-tag">人際</span>
+                <span class="trait-tag">社交</span>
+                <span class="trait-tag">關心</span> <span class="trait-tag">支持</span> <span class="trait-tag">幫助</span>
+                <span class="trait-tag">友善</span>
+                <span class="trait-tag">包容</span> <span class="trait-tag">信任</span> <span class="trait-tag">尊重</span>
+                <span class="trait-tag">理解</span>
+                <span class="trait-tag">同理心</span> <span class="trait-tag">同理</span> <span class="trait-tag">互信</span>
+                <span class="trait-tag">互助</span>
+                <span class="trait-tag">互惠</span> <span class="trait-tag">互動性</span> <span class="trait-tag">互動感</span>
+                <span class="trait-tag">互動度</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 主動進取力 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="heading2">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                主動進取力
+              </button>
+            </h2>
+            <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2"
+              data-bs-parent="#traitAccordion">
+              <div class="accordion-body">
+                <span class="trait-tag">主動</span> <span class="trait-tag">積極</span> <span class="trait-tag">熱情</span>
+                <span class="trait-tag">學習</span>
+                <span class="trait-tag">嘗試</span> <span class="trait-tag">開放</span> <span class="trait-tag">投入</span>
+                <span class="trait-tag">進取</span>
+                <span class="trait-tag">自發</span> <span class="trait-tag">活力</span> <span class="trait-tag">責任感</span>
+                <span class="trait-tag">驅動力</span>
+                <span class="trait-tag">精進</span> <span class="trait-tag">提升</span> <span class="trait-tag">進修</span>
+                <span class="trait-tag">成長</span>
+                <span class="trait-tag">成就感</span> <span class="trait-tag">挑戰</span> <span class="trait-tag">熱忱</span>
+                <span class="trait-tag">自我</span>
+                <span class="trait-tag">自信</span> <span class="trait-tag">自我要求</span> <span
+                  class="trait-tag">自我管理</span> <span class="trait-tag">自我激勵</span>
+                <span class="trait-tag">自我提升</span> <span class="trait-tag">思維</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 問題解決力 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="heading3">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                問題解決力
+              </button>
+            </h2>
+            <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3"
+              data-bs-parent="#traitAccordion">
+              <div class="accordion-body">
+                <span class="trait-tag">解決</span> <span class="trait-tag">獨立</span> <span class="trait-tag">邏輯</span>
+                <span class="trait-tag">分析</span>
+                <span class="trait-tag">思考</span> <span class="trait-tag">判斷</span> <span class="trait-tag">規劃</span>
+                <span class="trait-tag">執行</span>
+                <span class="trait-tag">效率</span> <span class="trait-tag">改善問題</span> <span class="trait-tag">優化</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 創新思維力 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="heading4">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                創新思維力
+              </button>
+            </h2>
+            <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4"
+              data-bs-parent="#traitAccordion">
+              <div class="accordion-body">
+                <span class="trait-tag">創新</span> <span class="trait-tag">創意</span> <span class="trait-tag">創造力</span>
+                <span class="trait-tag">突破</span>
+                <span class="trait-tag">改善</span> <span class="trait-tag">發想</span> <span class="trait-tag">構思</span>
+                <span class="trait-tag">創造</span>
+                <span class="trait-tag">變通</span> <span class="trait-tag">前瞻</span> <span class="trait-tag">變化</span>
+                <span class="trait-tag">調整</span>
+                <span class="trait-tag">創意性</span> <span class="trait-tag">創新性</span> <span class="trait-tag">創造性</span>
+                <span class="trait-tag">獨特性</span>
+                <span class="trait-tag">獨創性</span> <span class="trait-tag">新穎性</span> <span class="trait-tag">新鮮感</span>
+                <span class="trait-tag">新穎</span>
+                <span class="trait-tag">新鮮</span> <span class="trait-tag">新意</span> <span class="trait-tag">新思維</span>
+                <span class="trait-tag">新觀點</span>
+                <span class="trait-tag">新觀念</span> <span class="trait-tag">跳脫</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 穩定專注力 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="heading5">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
+                穩定專注力
+              </button>
+            </h2>
+            <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="heading5"
+              data-bs-parent="#traitAccordion">
+              <div class="accordion-body">
+                <span class="trait-tag">負責</span> <span class="trait-tag">細心</span> <span class="trait-tag">認真</span>
+                <span class="trait-tag">可靠</span>
+                <span class="trait-tag">誠實</span> <span class="trait-tag">配合</span> <span class="trait-tag">準時</span>
+                <span class="trait-tag">專注</span>
+                <span class="trait-tag">抗壓</span> <span class="trait-tag">壓力</span> <span class="trait-tag">適應</span>
+                <span class="trait-tag">充實</span>
+                <span class="trait-tag">紀律</span> <span class="trait-tag">穩定性</span> <span class="trait-tag">耐心</span>
+                <span class="trait-tag">耐性</span>
+                <span class="trait-tag">耐壓</span> <span class="trait-tag">耐磨</span> <span class="trait-tag">耐勞</span>
+                <span class="trait-tag">耐久性</span>
+                <span class="trait-tag">耐用性</span> <span class="trait-tag">穩健性</span> <span class="trait-tag">穩定感</span>
+                <span class="trait-tag">穩定度</span>
+                <span class="trait-tag">彈性</span> <span class="trait-tag">靈活</span> <span class="trait-tag">靈活性</span>
+                <span class="trait-tag">調適</span> <span class="trait-tag">應變</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Showcase 展示 -->
+        <h4 class="text-center mb-4" style="margin-top: 30px;"><i class="bi bi-image me-2"></i>頁面展示</h4>
+        <div class="showcase-wrapper">
+
+          <!-- 圖一：左圖右文 -->
+          <div class="row align-items-center mb-5 showcase-item">
+            <div class="col-md-6">
+              <img src="{% static 'app_poa_introduction/images/trait_analysis1.png' %}" class="fixed-image hover-shadow"
+                alt="軟性特質篩選條件">
+            </div>
+            <div class="col-md-6 showcase-content">
+              <div class="content-box">
+                <h5><i class="bi bi-sliders2 me-2"></i>軟性特質篩選條件</h5>
+                <p class="lead mb-0">使用者可自訂職業類別與特質字詞數量限制，彈性產出對應的特質分布分析。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 圖二：左文右圖 -->
+          <div class="row align-items-center mb-5 flex-md-row-reverse showcase-item">
+            <div class="col-md-6">
+              <img src="{% static 'app_poa_introduction/images/trait_analysis2.png' %}" class="fixed-image hover-shadow"
+                alt="軟性特質文字雲">
+            </div>
+            <div class="col-md-6 showcase-content">
+              <div class="content-box">
+                <h5><i class="bi bi-cloud-word me-2"></i>軟性特質文字雲</h5>
+                <p class="lead mb-0">將職缺描述中高頻出現的特質詞彙以文字雲方式呈現，一目了然。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 圖三與圖四：輪播 左圖右字 -->
+          <div class="row align-items-center mb-5 showcase-item">
+            <!-- 左圖（輪播） -->
+            <div class="col-md-6">
+              <div class="visualization-showcase">
+                <div id="personalityRadarCarousel" class="carousel slide" data-bs-ride="carousel">
+
+                  <!-- 圖片輪播內容 -->
+                  <div class="carousel-inner">
+                    <div class="carousel-item active">
+                      <img src="{% static 'app_poa_introduction/images/trait_analysis3.png' %}"
+                        class="d-block w-100 fixed-image" alt="全部職業類別雷達圖">
+                      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                        <h5>全部職業類別</h5>
+                      </div>
+                    </div>
+                    <div class="carousel-item">
+                      <img src="{% static 'app_poa_introduction/images/trait_analysis4.png' %}"
+                        class="d-block w-100 fixed-image" alt="單一職業類別雷達圖">
+                      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                        <h5>單一職業類別</h5>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 輪播指示器 -->
+                  <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#personalityRadarCarousel" data-bs-slide-to="0" class="active"
+                      aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#personalityRadarCarousel" data-bs-slide-to="1"
+                      aria-label="Slide 2"></button>
+                  </div>
+
+                  <!-- 輪播控制箭頭 -->
+                  <button class="carousel-control-prev" type="button" data-bs-target="#personalityRadarCarousel"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#personalityRadarCarousel"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- 右邊文字說明 -->
+            <div class="col-md-6 showcase-content">
+              <div class="content-box">
+                <h5><i class="bi bi-graph-up-arrow me-2"></i>軟性特質雷達圖</h5>
+                <p class="lead mb-0">以 z-score 標準化不同職業在五大軟性特質上的強度，透過雷達圖展現彼此差異與重視程度。</p>
+                <div class="text-dark bg-light bg-opacity-75 py-2 mt-3 rounded text-center">
+                  z = (x - μ) / σ
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <a href="/104/trait_analysis/" class="btn btn-outline-dark btn-lg">
+            立即前往<i class="bi bi-box-arrow-right ms-2"></i>
+          </a>
+        </div>
+
+
+      </section>
+    </div>
+  </div>
+  </div>
+
+  <script>
+    // 頁面載入時初始化
+    document.addEventListener('DOMContentLoaded', function () {
+      const poaPane = document.getElementById('poa');
+      const poaNav = document.getElementById('poa-nav');
+      const poaBtn = document.querySelector('[data-project="poa"]');
+
+      // 顯示預設的 tab 內容
+      showContent(poaPane, poaNav, poaBtn);
+
+      // 綁定主選單按鈕點擊事件
+      document.querySelectorAll('[data-bs-toggle="tab"]').forEach(btn => {
+        btn.addEventListener('click', function () {
+          const projectId = this.getAttribute('data-project');
+          const pane = document.getElementById(projectId);
+          const nav = document.getElementById(`${projectId}-nav`);
+          showContent(pane, nav, this);
+        });
+      });
+
+      // 綁定導覽連結滾動效果
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function (e) {
+          const href = this.getAttribute('href');
+          if (href.startsWith('#')) {
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) scrollToElement(target, this);
+          }
+        });
+      });
+
+      // 初始化滾動與圖片效果
+      initScrollListener();
+      initImageEffects();
+    });
+
+    // 切換面板內容顯示
+    function showContent(pane, nav, btn) {
+      // 隱藏所有內容區塊
+      document.querySelectorAll('.tab-pane').forEach(p => {
+        p.style.display = 'none';
+        p.classList.remove('show', 'active');
+      });
+
+      // 隱藏所有側邊欄
+      document.querySelectorAll('.nav-section').forEach(n => {
+        n.style.display = 'none';
+        n.classList.remove('show', 'active');
+      });
+
+      // 移除所有按鈕的 active 樣式
+      document.querySelectorAll('[data-bs-toggle="tab"]').forEach(b => {
+        b.classList.remove('active');
+      });
+
+      // 顯示目標區塊
+      if (pane) {
+        pane.style.display = 'block';
+        setTimeout(() => pane.classList.add('show', 'active'), 50);
+      }
+
+      // 顯示目標側邊欄
+      if (nav) {
+        nav.style.display = 'block';
+        setTimeout(() => nav.classList.add('show', 'active'), 50);
+      }
+
+      // 標記當前按鈕為 active
+      if (btn) btn.classList.add('active');
+    }
+
+    // 平滑滾動與導航狀態更新
+    function scrollToElement(element, link) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    }
+
+    // 初始化滾動事件監聽
+    function initScrollListener() {
+      let isScrolling = false;
+      window.addEventListener('scroll', function () {
+        if (!isScrolling) {
+          window.requestAnimationFrame(function () {
+            checkVisibleSections();
+            isScrolling = false;
+          });
+          isScrolling = true;
+        }
+      }, { passive: true });
+    }
+
+    // 滾動偵測目前顯示區塊，更新側邊欄高亮
+    function checkVisibleSections() {
+      document.querySelectorAll('.page-section').forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 100 && rect.bottom >= 100) {
+          const link = document.querySelector(`.nav-link[href="#${section.id}"]`);
+          if (link) {
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+          }
+        }
+      });
+    }
+
+    // 圖片淡入效果
+    function initImageEffects() {
+      document.querySelectorAll('.image-showcase img').forEach(img => {
+        img.style.opacity = '0';
+        img.addEventListener('load', () => {
+          img.style.transition = 'opacity 0.3s ease';
+          img.style.opacity = '1';
+        });
+      });
+    }
+  </script>
+</body>
+
+</html>

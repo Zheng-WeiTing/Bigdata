@@ -1,0 +1,618 @@
+{% extends '104/base.html' %}
+{% load static %}
+
+{% block page_title %}熱門關鍵字{% endblock %}
+
+{% block extra_css %}
+<style>
+/* select-box-top：篩選區 */
+.select-box-top {
+    width: 100%;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(64, 73, 118, 0.1);
+}
+
+.filter-row label {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+/* 下拉選單 */
+.form-select {
+    min-width: 0;
+    padding: 8px 12px;
+    border: 1px solid rgba(64, 73, 118, 0.2);
+    border-radius: 6px;
+    font-size: 14px;
+    color: #404976;
+}
+
+.form-select:focus {
+    border-color: #404976;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(64, 73, 118, 0.1);
+}
+
+#jobTypeSelect {
+    width: 100%;
+}
+
+#keywordCount {
+    width: 100px;
+    flex-shrink: 0;
+}
+
+#customKeywordCount {
+    width: 110px;
+    min-width: 0;
+}
+
+/* select-box-middle：表格區 */
+.select-box-middle {
+    width: 100%;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.keywords-table {
+    width: 100%;
+    table-layout: fixed;
+    font-size: 14px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.keywords-table th,
+.keywords-table td {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    word-break: break-word;
+}
+
+.keywords-table th {
+    background-color: rgb(62, 62, 62);
+    color: #fff;
+}
+
+.keywords-table tbody tr:nth-child(even) td {
+    background-color: rgb(217, 217, 217);
+}
+
+/* 表格捲軸 */
+.select-box-middle::-webkit-scrollbar {
+    width: 6px;
+}
+
+.select-box-middle::-webkit-scrollbar-track {
+    background: #ededeb;
+    border-radius: 3px;
+}
+
+.select-box-middle::-webkit-scrollbar-thumb {
+    background: #6d6f5e;
+    border-radius: 3px;
+}
+
+.select-box-middle::-webkit-scrollbar-thumb:hover {
+    background: #404976;
+}
+
+/* 分頁 */
+#pagination {
+    width: fit-content;
+    margin: 20px auto;
+}
+
+#pagination .btn {
+    padding: 4px 12px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#pagination span {
+    padding: 5px 10px;
+}
+
+#pagination .btn-outline-secondary {
+    border: 1px solid #ced4da;
+    background-color: #fff;
+    color: #6c757d;
+}
+
+#pagination .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+/* select-box-right：右側圖表 */
+.select-box-right {
+    width: 100%;
+    height: 500px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(64, 73, 118, 0.1);
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+}
+
+/* 手機只調整元件本身 */
+@media (max-width: 576px) {
+    .select-box-top {
+        padding: 15px;
+    }
+
+    #keywordCount,
+    #customKeywordCount {
+        width: 100%;
+    }
+
+    .select-box-middle {
+        max-height: 400px;
+    }
+
+    .select-box-right {
+        height: 420px;
+        padding: 10px;
+    }
+
+    .keywords-table {
+        font-size: 13px;
+    }
+
+    #pagination {
+        gap: 8px !important;
+        font-size: 13px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- main-content：熱門關鍵字主內容 -->
+<div class="container-fluid px-3 px-md-4 px-xl-5 py-4 py-xl-5">
+
+    <!-- grid-layout-3col：左右主要版面 -->
+    <div class="row g-4 g-xl-5">
+
+        <!-- left-panel：左側區塊 -->
+        <div class="col-12 col-xl-4">
+
+            <!-- select-box-top：篩選 -->
+            <div class="select-box-top mb-4">
+
+                <!-- filter-item：篩選條件 -->
+                <div>
+
+                    <!-- filter-row：職業類別 -->
+                    <div class="row align-items-center g-2 mb-3">
+                        <div class="col-12 col-sm-4">
+                            <label for="jobTypeSelect">職業類別：</label>
+                        </div>
+
+                        <div class="col-12 col-sm-8">
+                            <select id="jobTypeSelect" class="form-select">
+                                <option value="全部">全部</option>
+                                <option value="前端工程師">前端工程師</option>
+                                <option value="數據分析師">數據分析師</option>
+                                <option value="AI工程師">AI工程師</option>
+                                <option value="網路管理工程師">網路管理工程師</option>
+                                <option value="雲端工程師">雲端工程師</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- filter-row：關鍵字數量 -->
+                    <div class="row align-items-center g-2">
+                        <div class="col-12 col-sm-4">
+                            <label for="keywordCount">關鍵字數量：</label>
+                        </div>
+
+                        <!-- word-count-inputs：關鍵字數量控制 -->
+                        <div class="col-12 col-sm-8">
+                            <div class="d-flex flex-column flex-sm-row gap-2">
+                                <select id="keywordCount" class="form-select">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="custom">自訂</option>
+                                </select>
+
+                                <input
+                                    type="number"
+                                    id="customKeywordCount"
+                                    class="form-select"
+                                    min="1"
+                                    max="100"
+                                    placeholder="輸入數量"
+                                    style="display: none;">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- select-box-middle：關鍵字表格 -->
+            <div class="select-box-middle">
+                <table class="keywords-table">
+                    <thead>
+                        <tr>
+                            <th>關鍵字</th>
+                            <th>次數</th>
+                        </tr>
+                    </thead>
+                    <tbody id="keywordsTable"></tbody>
+                </table>
+
+                <!-- pagination：分頁 -->
+                <div id="pagination" class="d-flex align-items-center gap-3"></div>
+            </div>
+
+        </div>
+
+        <!-- select-box-right：右側圖表 -->
+        <div class="col-12 col-xl-8">
+            <div class="select-box-right">
+                <div class="chart-container">
+                    <canvas id="keywordsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+let currentChart = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    const jobTypeSelect = document.getElementById('jobTypeSelect');
+    const keywordCountSelect = document.getElementById('keywordCount');
+    const customKeywordCount = document.getElementById('customKeywordCount');
+
+    updateChart(10);
+
+    jobTypeSelect.addEventListener('change', function() {
+        updateChart(getKeywordCount());
+    });
+
+    keywordCountSelect.addEventListener('change', function() {
+        if (this.value === 'custom') {
+            customKeywordCount.style.display = 'block';
+            customKeywordCount.focus();
+        } else {
+            customKeywordCount.style.display = 'none';
+            customKeywordCount.value = '';
+            updateChart(parseInt(this.value));
+        }
+    });
+
+    customKeywordCount.addEventListener('change', function() {
+        const value = parseInt(this.value);
+
+        if (!Number.isNaN(value) && value >= 1 && value <= 100) {
+            updateChart(value);
+        } else {
+            alert('請輸入 1～100 之間的數字');
+            this.value = '';
+            this.style.display = 'none';
+            keywordCountSelect.value = '10';
+            updateChart(10);
+        }
+    });
+});
+
+/* 取得關鍵字數量 */
+function getKeywordCount() {
+    const countSelect = document.getElementById('keywordCount');
+    const customInput = document.getElementById('customKeywordCount');
+
+    if (countSelect.value === 'custom') {
+        const customValue = parseInt(customInput.value);
+        if (!Number.isNaN(customValue)) return customValue;
+        return 10;
+    }
+
+    return parseInt(countSelect.value);
+}
+
+/* 更新圖表 */
+function updateChart(keywordCount) {
+    const jobType = document.getElementById('jobTypeSelect').value;
+    fetchData(jobType, keywordCount);
+}
+
+/* 取得資料 */
+function fetchData(jobType, topN) {
+    const chartContainer = document.querySelector('.chart-container');
+    const keywordsTable = document.getElementById('keywordsTable');
+    const pagination = document.getElementById('pagination');
+
+    chartContainer.innerHTML = '<div class="text-center">載入中...</div>';
+    keywordsTable.innerHTML = '';
+    pagination.innerHTML = '';
+
+    const apiUrl =
+        `/104/top_keyword/api/keywords/` +
+        `?job_type=${encodeURIComponent(jobType)}` +
+        `&top_n=${encodeURIComponent(topN)}`;
+
+    fetch(apiUrl)
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.error || '載入失敗');
+                });
+            }
+
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) throw new Error(data.error);
+
+            chartContainer.innerHTML = '<canvas id="keywordsChart"></canvas>';
+
+            if (data.job_type === '全部') {
+                updateChartDisplay(data.labels, [], data.job_type, data.datasets);
+                updateTable(data.totals);
+            } else {
+                const words = data.keywords.map(item => item.word);
+                const counts = data.keywords.map(item => item.count);
+
+                updateChartDisplay(words, counts, data.job_type);
+                updateTable(data.keywords);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+
+            chartContainer.innerHTML = `
+                <div class="alert alert-danger text-center">
+                    載入失敗：${error.message}
+                </div>
+            `;
+
+            keywordsTable.innerHTML = '';
+            pagination.innerHTML = '';
+        });
+}
+
+/* 顯示圖表 */
+function updateChartDisplay(words, counts, jobType, datasets = null) {
+    const canvas = document.getElementById('keywordsChart');
+
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+
+    if (currentChart) {
+        currentChart.destroy();
+        currentChart = null;
+    }
+
+    const keywordCount = getKeywordCount();
+    const chartTitle = `${jobType}前${keywordCount}個熱門關鍵字`;
+
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom',
+
+                labels: {
+                    font: {
+                        size: 14
+                    },
+
+                    padding: 20
+                }
+            },
+
+            title: {
+                display: true,
+                text: chartTitle,
+
+                font: {
+                    size: 24,
+                    weight: 'bold'
+                },
+
+                padding: {
+                    top: 0,
+                    bottom: 30
+                },
+
+                color: 'rgb(36, 66, 42)'
+            },
+
+            tooltip: {
+                mode: 'index',
+                intersect: false
+            }
+        },
+
+        layout: {
+            padding: {
+                top: 0
+            }
+        },
+
+        scales: {
+            x: {
+                stacked: datasets !== null,
+
+                grid: {
+                    display: false
+                },
+
+                ticks: {
+                    font: {
+                        size: 12
+                    }
+                }
+            },
+
+            y: {
+                stacked: datasets !== null,
+                beginAtZero: true,
+
+                ticks: {
+                    precision: 0,
+
+                    font: {
+                        size: 12
+                    }
+                }
+            }
+        }
+    };
+
+    if (datasets !== null) {
+        currentChart = new Chart(ctx, {
+            type: 'bar',
+
+            data: {
+                labels: words,
+                datasets: datasets
+            },
+
+            options: commonOptions
+        });
+    } else {
+        const baseColors = {
+            '前端工程師': [82, 130, 192],
+            '數據分析師': [42, 157, 143],
+            'AI工程師': [38, 70, 83],
+            '網路管理工程師': [144, 190, 109],
+            '雲端工程師': [67, 110, 238]
+        };
+
+        const baseColor = baseColors[jobType] || [54, 162, 235];
+        const total = counts.length;
+
+        const backgroundColors = counts.map((count, index) => {
+            const opacity = total > 0 ? 0.9 - (index / total) * 0.6 : 0.9;
+            return `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, ${opacity.toFixed(2)})`;
+        });
+
+        currentChart = new Chart(ctx, {
+            type: 'bar',
+
+            data: {
+                labels: words,
+
+                datasets: [{
+                    label: jobType,
+                    data: counts,
+                    backgroundColor: backgroundColors
+                }]
+            },
+
+            options: commonOptions
+        });
+    }
+}
+
+/* 更新表格 */
+function updateTable(keywords) {
+    const tbody = document.getElementById('keywordsTable');
+    const pagination = document.getElementById('pagination');
+    const itemsPerPage = 10;
+    let currentPage = 1;
+
+    if (!keywords || keywords.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="2">目前沒有資料</td>
+            </tr>
+        `;
+
+        pagination.innerHTML = '';
+        return;
+    }
+
+    function renderTable(page) {
+        tbody.innerHTML = '';
+
+        const start = (page - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const slicedKeywords = keywords.slice(start, end);
+
+        slicedKeywords.forEach(item => {
+            const row = document.createElement('tr');
+            const wordCell = document.createElement('td');
+            const countCell = document.createElement('td');
+
+            wordCell.textContent = item.word;
+            countCell.textContent = item.count;
+
+            row.appendChild(wordCell);
+            row.appendChild(countCell);
+            tbody.appendChild(row);
+        });
+    }
+
+    function renderPagination() {
+        pagination.innerHTML = '';
+
+        const pageCount = Math.ceil(keywords.length / itemsPerPage);
+        if (pageCount <= 1) return;
+
+        const previousButton = document.createElement('span');
+        previousButton.innerHTML = '&larr;';
+        previousButton.className = 'btn btn-sm btn-outline-secondary';
+        previousButton.style.cursor = currentPage > 1 ? 'pointer' : 'not-allowed';
+
+        if (currentPage > 1) {
+            previousButton.addEventListener('click', function() {
+                currentPage--;
+                renderTable(currentPage);
+                renderPagination();
+            });
+        }
+
+        const pageInfo = document.createElement('span');
+        pageInfo.textContent = `第 ${currentPage} / ${pageCount} 頁`;
+
+        const nextButton = document.createElement('span');
+        nextButton.innerHTML = '&rarr;';
+        nextButton.className = 'btn btn-sm btn-outline-secondary';
+        nextButton.style.cursor = currentPage < pageCount ? 'pointer' : 'not-allowed';
+
+        if (currentPage < pageCount) {
+            nextButton.addEventListener('click', function() {
+                currentPage++;
+                renderTable(currentPage);
+                renderPagination();
+            });
+        }
+
+        pagination.appendChild(previousButton);
+        pagination.appendChild(pageInfo);
+        pagination.appendChild(nextButton);
+    }
+
+    renderTable(currentPage);
+    renderPagination();
+}
+</script>
+{% endblock %}

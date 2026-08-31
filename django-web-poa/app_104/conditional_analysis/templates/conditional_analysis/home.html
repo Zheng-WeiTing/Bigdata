@@ -1,0 +1,465 @@
+{% extends '104/base.html' %}
+{% load static %}
+
+{% block page_title %}個人條件分析{% endblock %}
+
+{% block extra_css %}
+<style>
+/* 篩選卡片外觀 */
+.select-box-top {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto 1.5rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(64, 73, 118, 0.1);
+}
+
+/* 篩選列 */
+.condition-filter-row {
+    width: 100%;
+}
+
+.condition-filter-label {
+    width: 80px;
+    flex: 0 0 80px;
+    color: #000;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* 下拉選單 */
+.form-select {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    padding: 0 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    border: 1px solid #404976;
+    color: #404976;
+}
+
+.form-select:focus {
+    border-color: #404976;
+    box-shadow: 0 0 0 0.15rem rgba(64, 73, 118, 0.15);
+}
+
+/* X/Y 軸按鈕 */
+.btn-group {
+    min-width: 0;
+}
+
+.btn-group button {
+    height: 40px;
+    padding: 0 15px;
+    border: 1px solid #404976;
+    background-color: #fff;
+    color: #404976;
+    line-height: 1;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-group button.active,
+.btn-group button:hover {
+    background-color: #404976;
+    color: #fff;
+}
+
+/* 圓餅圖 */
+#pie-container {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    min-width: 0;
+}
+
+#pieChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* 長條圖 */
+#bar-container {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    min-width: 0;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(64, 73, 118, 0.1);
+}
+
+#conditionChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* 手機只調整元件本身 */
+@media (max-width: 576px) {
+    .select-box-top {
+        max-width: 100%;
+        padding: 15px !important;
+    }
+
+    .condition-filter-row {
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+
+    .condition-filter-label {
+        width: 100%;
+        flex: none;
+    }
+
+    #pie-container {
+        height: 300px;
+    }
+
+    #bar-container {
+        height: 500px;
+        padding: 15px;
+    }
+
+    .btn-group button {
+        padding: 0 10px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- condition-layout：整個個人條件分析內容 -->
+<div class="container-fluid px-3 px-md-4 px-xl-5 py-4 py-xl-5">
+
+    <!-- grid-layout-3col：左右主要版面 -->
+    <div class="row g-4">
+
+        <!-- left-panel：左側區塊 -->
+        <div class="col-12 col-xl-4">
+
+            <!-- select-box-top：篩選條件 -->
+            <div class="select-box-top p-3">
+
+                <!-- top-filters：職業類別 -->
+                <div class="condition-filter-row d-flex align-items-center gap-2 mb-3">
+                    <label for="jobType" class="condition-filter-label mb-0">職業類別：</label>
+
+                    <select id="jobType" class="form-select flex-grow-1">
+                        <option value="全部">全部</option>
+                        <option value="前端工程師">前端工程師</option>
+                        <option value="數據分析師">數據分析師</option>
+                        <option value="AI工程師">AI工程師</option>
+                        <option value="網路管理工程師">網路管理工程師</option>
+                        <option value="雲端工程師">雲端工程師</option>
+                    </select>
+                </div>
+
+                <!-- filters-row：X 軸篩選 -->
+                <div class="condition-filter-row d-flex align-items-center gap-2 mb-3">
+                    <label class="condition-filter-label mb-0">X 軸：</label>
+
+                    <div class="btn-group flex-grow-1" id="conditionType">
+                        <button type="button" data-type="workExp" class="active flex-fill">經歷</button>
+                        <button type="button" data-type="edu" class="flex-fill">學歷</button>
+                    </div>
+                </div>
+
+                <!-- filters-row：Y 軸篩選 -->
+                <div class="condition-filter-row d-flex align-items-center gap-2">
+                    <label class="condition-filter-label mb-0">Y 軸：</label>
+
+                    <div class="btn-group flex-grow-1" id="yAxisType">
+                        <button type="button" data-type="count" class="active flex-fill">職缺數</button>
+                        <button type="button" data-type="salary" class="flex-fill">薪資</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- select-box-middle：圓餅圖區域 -->
+            <div class="d-flex justify-content-center align-items-center p-3">
+                <div id="pie-container">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- select-box-right：右側長條圖 -->
+        <div class="col-12 col-xl-8">
+            <div id="bar-container">
+                <canvas id="conditionChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+<script>
+let currentChart = null;
+let pieChart = null;
+
+/* 取得圖表資料 */
+function fetchChartData() {
+    const jobType = document.getElementById("jobType").value;
+    const condition = document.querySelector("#conditionType button.active").dataset.type;
+    const yAxisType = document.querySelector("#yAxisType button.active").dataset.type;
+
+    const url = `/104/conditional_analysis/api/conditional/?jobType=${encodeURIComponent(jobType)}&condition=${encodeURIComponent(condition)}&yAxis=${encodeURIComponent(yAxisType)}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            renderChart(data.labels, data.counts, condition, yAxisType);
+            renderPieChart(data.labels, data.counts, condition);
+        })
+        .catch(error => {
+            console.error("取得圖表資料失敗：", error);
+        });
+}
+
+/* 長條圖 */
+function renderChart(labels, counts, condition, yAxisType) {
+    const canvas = document.getElementById("conditionChart");
+    const ctx = canvas.getContext("2d");
+
+    if (currentChart) {
+        currentChart.destroy();
+        currentChart = null;
+    }
+
+    const conditionMap = {
+        workExp: "經歷",
+        edu: "學歷"
+    };
+
+    const yAxisLabel = yAxisType === "salary" ? "平均薪資" : "職缺數量";
+    const jobType = document.getElementById("jobType").value;
+    const jobPrefix = jobType === "全部" ? "" : jobType;
+    const title = `${jobPrefix}${conditionMap[condition]}直條圖`;
+
+    const colors = labels.map((_, index) => {
+        const opacity = Math.min(0.3 + index * 0.1, 1);
+        return yAxisType === "salary" ? `rgba(184, 134, 11, ${opacity})` : `rgba(64, 73, 118, ${opacity})`;
+    });
+
+    currentChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [{
+                data: counts,
+                backgroundColor: colors,
+                borderWidth: 0,
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    left: 20,
+                    right: 20,
+                    top: 40,
+                    bottom: 10
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: title,
+                    font: {
+                        size: 24,
+                        weight: "bold"
+                    },
+                    padding: {
+                        top: 0,
+                        bottom: 30
+                    },
+                    color: "#000"
+                },
+                datalabels: {
+                    anchor: "end",
+                    align: "top",
+                    offset: 4,
+                    color: "#404976",
+                    font: {
+                        weight: "bold",
+                        size: 14
+                    },
+                    formatter: function(value) {
+                        if (value === 0) return null;
+                        if (yAxisType === "salary") return Math.round(value / 1000) + "K";
+                        return value;
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: conditionMap[condition],
+                        font: {
+                            size: 14,
+                            weight: "bold"
+                        }
+                    },
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 0
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: yAxisLabel,
+                        font: {
+                            size: 14,
+                            weight: "bold"
+                        }
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return yAxisType === "salary" ? (value / 1000) + "K" : value;
+                        },
+                        stepSize: yAxisType === "salary" ? 20000 : undefined
+                    },
+                    suggestedMax: yAxisType === "salary" ? 150000 : undefined
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+}
+
+/* 圓餅圖 */
+function renderPieChart(labels, counts, condition) {
+    const canvas = document.getElementById("pieChart");
+    const ctx = canvas.getContext("2d");
+    const jobType = document.getElementById("jobType").value;
+
+    const conditionMap = {
+        workExp: "經歷",
+        edu: "學歷"
+    };
+
+    const chartTitle = jobType === "全部" ? `${conditionMap[condition]}圓餅圖` : `${jobType}${conditionMap[condition]}圓餅圖`;
+
+    function simplifyLabel(label) {
+        return label.includes("年以上") ? label.replace("年以上", "年") : label;
+    }
+
+    const filteredData = labels
+        .map((label, index) => ({
+            label: simplifyLabel(label),
+            value: counts[index]
+        }))
+        .filter(item => item.value > 0);
+
+    const filteredLabels = filteredData.map(item => item.label);
+    const filteredCounts = filteredData.map(item => item.value);
+
+    if (pieChart) {
+        pieChart.destroy();
+        pieChart = null;
+    }
+
+    if (filteredCounts.length === 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "#666";
+        ctx.textAlign = "center";
+        ctx.fillText("無可視化資料", canvas.width / 2, canvas.height / 2);
+        return;
+    }
+
+    pieChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels: filteredLabels,
+            datasets: [{
+                data: filteredCounts,
+                backgroundColor: [
+                    "#722F37",
+                    "#8B4B50",
+                    "#A4676A",
+                    "#BE8385",
+                    "#D7A0A1",
+                    "#EFBCBC"
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: chartTitle,
+                    font: {
+                        size: 24,
+                        weight: "bold"
+                    },
+                    color: "#000",
+                    padding: {
+                        top: 0,
+                        bottom: 20
+                    }
+                },
+                datalabels: {
+                    color: "#fff",
+                    font: {
+                        weight: "bold",
+                        size: 14
+                    },
+                    formatter: function(value, context) {
+                        return context.chart.data.labels[context.dataIndex];
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+}
+
+/* 切換按鈕 */
+function setupButtonGroup(selector) {
+    const buttons = document.querySelectorAll(selector);
+
+    buttons.forEach(button => {
+        button.addEventListener("click", function() {
+            buttons.forEach(item => item.classList.remove("active"));
+            this.classList.add("active");
+            fetchChartData();
+        });
+    });
+}
+
+/* 頁面初始化 */
+document.addEventListener("DOMContentLoaded", function() {
+    fetchChartData();
+    document.getElementById("jobType").addEventListener("change", fetchChartData);
+    setupButtonGroup("#conditionType button");
+    setupButtonGroup("#yAxisType button");
+});
+</script>
+{% endblock %}

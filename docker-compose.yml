@@ -1,0 +1,64 @@
+services:
+  web-poa:
+    build:
+      context: . # 使用 docker-compose.yml 所在目錄作為建置範圍
+      dockerfile: ./docker-files-poa/Dockerfile # POA 的 Dockerfile
+    container_name: web-poa
+    volumes:
+      - ./django-web-poa:/app # 將 POA Django 專案掛載到容器 /app
+    expose:
+      - "8000" # 只提供 Docker 容器內部存取
+    env_file:
+      - ./docker-files-poa/.env # 載入 POA 環境變數
+    depends_on:
+      - db # POA 啟動前先啟動 PostgreSQL
+
+  db:
+    image: postgres:13 # 使用 PostgreSQL 13 官方映像檔
+    container_name: db
+    ports:
+      - "5432:5432" # Mac 5432 對應 PostgreSQL 容器 5432
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data # 將資料庫資料保存在 Mac
+    env_file:
+      - ./docker-files-poa/.env # 載入 PostgreSQL 環境變數
+
+  web-llm:
+    build:
+      context: . # 使用 docker-compose.yml 所在目錄作為建置範圍
+      dockerfile: ./docker-files-llm/Dockerfile # LLM Web 的 Dockerfile
+    container_name: web-llm
+    volumes:
+      - ./django-web-llm:/app # 將 LLM Django 專案掛載到容器 /app
+
+  ollama:
+    image: ollama/ollama:latest # 使用 Ollama 官方最新映像檔
+    container_name: ollama
+    ports:
+      - "11434:11434" # Mac 11434 對應 Ollama API 11434
+    volumes:
+      - ollama-data:/root/.ollama # 保存下載好的 AI 模型
+      - ./docker-files-ollama/entrypoint_ollama.sh:/entrypoint_ollama.sh:ro # 掛載 Ollama 啟動腳本
+    entrypoint: ["sh", "/entrypoint_ollama.sh"] # 啟動時執行 Ollama 腳本
+    restart: unless-stopped # 意外停止時自動重新啟動
+    tty: true # 提供虛擬終端
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434 # Ollama API 監聽位址
+      - OLLAMA_NUM_PARALLEL=2 # 最多同時處理 2 個請求
+      - OLLAMA_MAX_QUEUE=512 # 最多允許 512 個等待中的請求
+      - OLLAMA_MAX_LOADED_MODELS=3 # 最多同時載入 3 個模型
+      - OLLAMA_KEEP_ALIVE=-1 # 模型載入後保持在記憶體中
+
+  nginx:
+    build:
+      context: ./nginx # 使用 nginx 資料夾內的 Dockerfile 建置
+    volumes:
+      - ./django-web-poa/staticfiles_collected:/app/staticfiles:ro # 提供 POA 的 CSS、JS、圖片等靜態檔案
+    ports:
+      - "81:80" # localhost:81 對應 Nginx 容器的 80
+    depends_on:
+      - web-poa # Nginx 啟動前先啟動 POA
+      - web-llm # Nginx 啟動前先啟動 LLM Web
+
+volumes:
+  ollama-data: # 保存 Ollama 已下載的模型

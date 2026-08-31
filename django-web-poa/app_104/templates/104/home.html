@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>104人力銀行分析平台</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            background-color: #f6f6f6;
+        }
+
+        .return-btn {
+            background-color: #404976 !important;
+            color: #ffe9d7 !important;
+            border-color: #404976 !important;
+        }
+
+        .return-btn:hover {
+            background-color: #6d6f5e !important;
+            color: #ffffff !important;
+            border-color: #6d6f5e !important;
+        }
+
+        .return-btn .feature-icon {
+            color: #ffe9d7 !important;
+        }
+
+        .return-btn:hover .feature-icon {
+            color: #ffffff !important;
+        }
+
+        .return-btn .feature-title {
+            color: #ffe9d7 !important;
+        }
+
+        .return-btn:hover .feature-title {
+            color: #ffffff !important;
+        }
+
+        .platform-brand {
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .platform-brand a {
+            text-decoration: none;
+        }
+
+        .platform-name {
+            display: block;
+            font-size: 1.2rem;
+            color: #ffe9d7;
+            font-weight: 600;
+        }
+
+        .platform-subtitle {
+            display: block;
+            font-size: 1rem;
+            color: #dcc0aa;
+            text-align: center;
+        }
+
+        .welcome-text {
+            color: #ffe9d7;
+            font-size: 1.8rem;
+            margin: 0;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .feature-card {
+            display: block;
+            background: #f8eeff;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #a6afe0;
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(109, 111, 94, 0.2);
+            background: #404976;
+        }
+
+        .feature-icon {
+            display: block;
+            font-size: 2.5rem;
+            color: #6d6f5e;
+            margin-bottom: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            color: #ffe9d7;
+        }
+
+        .feature-title {
+            color: #6d6f5e;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .feature-card:hover .feature-title {
+            color: #ffe9d7;
+        }
+
+        #current-time {
+            font-size: 1rem;
+            color: #dcc0aa;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- grid-container：整個頁面 -->
+    <div class="container-fluid min-vh-100 p-0">
+
+        <!-- top-section：上方區塊 -->
+        <div class="row g-0 align-items-center px-3 py-3" style="background-color: #6d6f5e; border-bottom: 1px solid #a7a58d;">
+
+            <!-- platform-section：左側平台名稱 -->
+            <div class="col-md-4 d-flex align-items-center justify-content-center justify-content-md-start px-md-4">
+                <h1 class="platform-brand">
+                    <a href="{% url 'app_104:home' %}">
+                        <span class="platform-name">104人力銀行</span>
+                        <span class="platform-subtitle">分析平台</span>
+                    </a>
+                </h1>
+            </div>
+
+            <!-- welcome-section：中間歡迎文字 -->
+            <div class="col-md-4 d-flex align-items-center justify-content-center my-2 my-md-0">
+                <h2 class="welcome-text">Hello 😊</h2>
+            </div>
+
+            <!-- time-section：右側時間 -->
+            <div class="col-md-4 d-flex align-items-center justify-content-center justify-content-md-end px-md-4">
+                <span id="current-time"></span>
+            </div>
+        </div>
+
+        <!-- bottom-section：下方內容區 -->
+        <div class="container py-5">
+
+            <!-- content-section：功能選單內容 -->
+            <div class="row justify-content-center mt-lg-5">
+                <div class="col-12 col-xl-10">
+
+                    <!-- feature-grid：所有功能卡片 -->
+                    <div class="row g-4">
+
+                        <!-- feature-row 上排：職缺詳情 -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <a href="{% url 'area_analysis:home' %}" class="feature-card text-decoration-none">
+                                <i class="bi bi-briefcase-fill feature-icon"></i>
+                                <h3 class="feature-title">職缺詳情</h3>
+                            </a>
+                        </div>
+
+                        <!-- feature-row 上排：熱門關鍵字 -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <a href="{% url 'top_keyword:home' %}" class="feature-card text-decoration-none">
+                                <i class="bi bi-search feature-icon"></i>
+                                <h3 class="feature-title">熱門關鍵字</h3>
+                            </a>
+                        </div>
+
+                        <!-- feature-row 上排：關鍵字趨勢 -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <a href="{% url 'search_keyword:home' %}" class="feature-card text-decoration-none">
+                                <i class="bi bi-clock-fill feature-icon"></i>
+                                <h3 class="feature-title">關鍵字趨勢</h3>
+                            </a>
+                        </div>
+
+                        <!-- feature-row 上排：薪資分析 -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <a href="{% url 'salary_analysis:home' %}" class="feature-card text-decoration-none">
+                                <i class="bi bi-cash-stack feature-icon"></i>
+                                <h3 class="feature-title">薪資分析</h3>
+                            </a>
+                        </div>
+
+                        <!-- feature-row 下排：擅長工具分析 -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <a href="{% url 'tool_analysis:home' %}" class="feature-card text-decoration-none">
+                                <i class="bi bi-tools feature-icon"></i>
+                                <h3 class="feature-title">擅長工具分析</h3>
+                            </a>
+                        </div>
+
+                        <!-- feature-row 下排：個人條件分析 -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <a href="{% url 'conditional_analysis:home' %}" class="feature-card text-decoration-none">
+                                <i class="bi bi-person-badge-fill feature-icon"></i>
+                                <h3 class="feature-title">個人條件分析</h3>
+                            </a>
+                        </div>
+
+                        <!-- feature-row 下排：個人特質分析 -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <a href="{% url 'trait_analysis:home' %}" class="feature-card text-decoration-none">
+                                <i class="bi bi-stars feature-icon"></i>
+                                <h3 class="feature-title">個人特質分析</h3>
+                            </a>
+                        </div>
+
+                        <!-- feature-row 下排：返回輿情大數據 -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <a href="/" class="feature-card text-decoration-none return-btn">
+                                <i class="bi bi-arrow-left-circle feature-icon"></i>
+                                <h3 class="feature-title">返回輿情大數據</h3>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            };
+
+            document.getElementById('current-time').textContent =
+                now.toLocaleDateString('zh-TW', options);
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+</html>

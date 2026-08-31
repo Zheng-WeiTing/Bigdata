@@ -1,0 +1,611 @@
+{% extends '104/base.html' %}
+{% load static %}
+
+{% block page_title %}個人特質分析{% endblock %}
+
+{% block extra_css %}
+<style>
+/* select-box-top：篩選區 */
+.select-box-top {
+    width: 100%;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(64, 73, 118, 0.1);
+}
+
+/* 篩選文字 */
+.filter-row label {
+    color: #000;
+    font-weight: 500;
+    margin: 0;
+    white-space: nowrap;
+}
+
+/* 下拉選單 */
+.form-select {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    padding: 0 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: white;
+    border: 1px solid rgba(64, 73, 118, 0.3);
+    color: #404976;
+}
+
+.form-select:focus {
+    border-color: #404976;
+    box-shadow: 0 0 0 2px rgba(64, 73, 118, 0.15);
+}
+
+#wordCount {
+    width: 100%;
+    min-width: 0;
+}
+
+#customWordCount {
+    width: 90px;
+    flex-shrink: 0;
+    display: none;
+}
+
+/* select-box-middle：文字雲卡片 */
+.select-box-middle {
+    width: 100%;
+    height: 450px;
+    min-width: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(64, 73, 118, 0.1);
+    padding: 20px;
+}
+
+.wordcloud-container {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 8px;
+}
+
+#wordCloud {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 60px);
+    min-width: 0;
+    background-color: transparent;
+    border-radius: 8px;
+}
+
+/* select-box-right：右側雷達圖 */
+.select-box-right {
+    height: 600px;
+    background-color: rgb(55, 95, 96);
+    border: 1px solid rgba(64, 73, 118, 0.1);
+    box-shadow: 0 2px 8px rgba(64, 73, 118, 0.05);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.radar-chart-container {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(248, 244, 242, 0.95);
+    border-radius: 8px;
+}
+
+/* 雷達圖真正可用空間 */
+.radar-canvas-wrapper {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+}
+
+#radarChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* 標題 */
+.chart-title {
+    color: rgb(38, 38, 38);
+    font-size: 24px;
+    font-weight: bold;
+    margin: 20px 0 15px;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* 手機只調整元件本身 */
+@media (max-width: 576px) {
+    .select-box-top {
+        padding: 15px;
+    }
+
+    #customWordCount {
+        width: 90px;
+    }
+
+    .select-box-middle {
+        height: 380px;
+        padding: 15px;
+    }
+
+    .select-box-right {
+        height: 450px;
+        padding: 15px;
+    }
+
+    .chart-title {
+        font-size: 20px;
+        margin: 15px 0 10px;
+    }
+
+    #wordCloud {
+        height: calc(100% - 50px);
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- trait-layout：整個個人特質分析內容 -->
+<div class="container-fluid px-3 px-md-4 px-xl-5 py-4 py-xl-5">
+
+    <!-- grid-layout-3col：左右主要版面 -->
+    <div class="row g-4">
+
+        <!-- left-panel：左側區塊 -->
+        <div class="col-12 col-xl-5">
+
+            <!-- select-box-top：篩選條件 -->
+            <div class="select-box-top mb-4">
+
+                <!-- top-filters：篩選區 -->
+                <div class="row g-3">
+
+                    <!-- filter-row：職業類別 -->
+                    <div class="col-12">
+                        <div class="row align-items-center g-2">
+                            <div class="col-12 col-sm-4">
+                                <label for="jobType">職業類別：</label>
+                            </div>
+
+                            <div class="col-12 col-sm-8">
+                                <select id="jobType" class="form-select">
+                                    <option value="全部">全部</option>
+
+                                    {% for job in job_types %}
+                                        {% if job != "全部" %}
+                                            <option value="{{ job }}">{{ job }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- filter-row：字詞數量 -->
+                    <div class="col-12">
+                        <div class="row align-items-center g-2">
+                            <div class="col-12 col-sm-4">
+                                <label for="wordCount">字詞數量：</label>
+                            </div>
+
+                            <!-- word-count-inputs：字詞數量控制 -->
+                            <div class="col-12 col-sm-8">
+                                <div class="d-flex gap-2">
+                                    <select id="wordCount" class="form-select flex-grow-1">
+                                        <option value="30">前 30 筆</option>
+                                        <option value="40">前 40 筆</option>
+                                        <option value="50" selected>前 50 筆</option>
+                                        <option value="custom">自訂</option>
+                                    </select>
+
+                                    <input
+                                        type="number"
+                                        id="customWordCount"
+                                        class="form-select"
+                                        min="1"
+                                        max="100"
+                                        placeholder="輸入數量">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- select-box-middle：文字雲 -->
+            <div class="select-box-middle">
+                <div class="wordcloud-container">
+                    <h2 class="chart-title" id="wordCloudTitle">職業類別文字雲</h2>
+                    <div id="wordCloud"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- select-box-right：右側雷達圖 -->
+        <div class="col-12 col-xl-7">
+            <div class="select-box-right">
+                <div class="radar-chart-container">
+                    <h2 class="chart-title" id="radarChartTitle">職業類別雷達圖</h2>
+
+                    <div class="radar-canvas-wrapper">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/wordcloud@1.1.2/src/wordcloud2.min.js"></script>
+
+<script>
+let radarChart = null;
+let jobDatasets = {};
+let fullData = null;
+let currentTraits = [];
+let resizeTimer = null;
+
+/* 計算平均值與標準差 */
+function calculateStats(data, categories) {
+    const stats = {};
+    const filteredData = Object.entries(data).filter(([key]) => key !== "全部");
+
+    categories.forEach(category => {
+        const values = filteredData.map(([_, job]) => job[category] || 0);
+        const mean = values.reduce((a, b) => a + b, 0) / values.length;
+        const variance = values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / values.length;
+        const stdDev = Math.sqrt(variance) || 1;
+
+        stats[category] = {
+            mean,
+            stdDev
+        };
+    });
+
+    return stats;
+}
+
+/* 繪製雷達圖 */
+function renderRadarChart(data, selectedJobType) {
+    const canvas = document.getElementById("radarChart");
+
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+
+    if (radarChart) {
+        radarChart.destroy();
+        radarChart = null;
+    }
+
+    const categories = [
+        "溝通協作力",
+        "問題解決力",
+        "穩定專注力",
+        "創新思維力",
+        "主動進取力"
+    ];
+
+    const stats = calculateStats(data, categories);
+    const filteredData = {};
+
+    Object.entries(data).forEach(([key, value]) => {
+        if (key !== "全部") filteredData[key] = value;
+    });
+
+    const jobColors = {
+        "前端工程師": "rgba(64, 73, 118, 0.7)",
+        "數據分析師": "rgba(142, 68, 45, 0.7)",
+        "AI工程師": "rgba(39, 95, 62, 0.7)",
+        "網路管理工程師": "rgba(89, 55, 106, 0.7)",
+        "雲端工程師": "rgba(168, 116, 44, 0.7)"
+    };
+
+    if (Object.keys(jobDatasets).length === 0) {
+        Object.keys(filteredData).forEach(job => {
+            const values = filteredData[job];
+            const color = jobColors[job] || "rgba(64, 73, 118, 0.7)";
+
+            jobDatasets[job] = {
+                label: job,
+
+                data: categories.map(category => {
+                    const value = values[category] || 0;
+                    const zscore = (value - stats[category].mean) / stats[category].stdDev;
+
+                    return Number(((zscore * 20) + 50).toFixed(1));
+                }),
+
+                backgroundColor: color.replace("0.7", "0.2"),
+                borderColor: color,
+                pointBackgroundColor: color,
+                pointBorderColor: "#fff",
+                pointHoverBackgroundColor: "#fff",
+                pointHoverBorderColor: color,
+                borderWidth: 2
+            };
+        });
+    }
+
+    let datasets;
+
+    if (selectedJobType === "全部") {
+        datasets = Object.values(jobDatasets);
+    } else {
+        const selectedDataset = jobDatasets[selectedJobType];
+
+        if (!selectedDataset) {
+            console.error(`未找到 ${selectedJobType} 的數據集`);
+            return;
+        }
+
+        datasets = [selectedDataset];
+    }
+
+    radarChart = new Chart(ctx, {
+        type: "radar",
+
+        data: {
+            labels: categories,
+            datasets: datasets
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 100,
+                    backgroundColor: "rgba(9, 62, 39, 0.05)",
+
+                    grid: {
+                        color: "rgba(9, 62, 39, 0.1)"
+                    },
+
+                    ticks: {
+                        stepSize: 20,
+                        maxTicksLimit: 6,
+
+                        font: {
+                            size: 12,
+                            weight: "bold"
+                        },
+
+                        color: "rgba(0, 0, 0, 0.7)",
+                        backdropColor: "transparent",
+                        backdropPadding: 2,
+                        showLabelBackdrop: false,
+
+                        callback: function(value) {
+                            if (value === 50) return "平均";
+                            return `${value < 50 ? "-" : "+"}${Math.abs(value - 50) / 20}σ`;
+                        }
+                    },
+
+                    pointLabels: {
+                        font: {
+                            size: 14,
+                            weight: "bold"
+                        },
+
+                        color: "rgba(102, 3, 3, 0.9)"
+                    }
+                }
+            },
+
+            plugins: {
+                legend: {
+                    position: "bottom",
+
+                    labels: {
+                        font: {
+                            size: 12,
+                            weight: "bold"
+                        },
+
+                        padding: 20
+                    }
+                },
+
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const originalValue = data[context.dataset.label][categories[context.dataIndex]];
+                            const zscore = ((context.raw - 50) / 20).toFixed(2);
+
+                            return `${context.dataset.label}: ${zscore}σ (原值: ${originalValue})`;
+                        }
+                    }
+                }
+            },
+
+            layout: {
+                padding: {
+                    top: 10,
+                    bottom: 20
+                }
+            }
+        }
+    });
+}
+
+/* 繪製文字雲 */
+function renderWordCloud(traits) {
+    const container = document.getElementById("wordCloud");
+    container.innerHTML = "";
+
+    if (!Array.isArray(traits) || traits.length === 0) {
+        container.innerHTML = '<p style="color:gray;">無特質資料可顯示</p>';
+        return;
+    }
+
+    let wordCount = 50;
+    const wordCountSelect = document.getElementById("wordCount");
+
+    if (wordCountSelect.value === "custom") {
+        const customCount = parseInt(document.getElementById("customWordCount").value);
+
+        if (!isNaN(customCount) && customCount >= 1 && customCount <= 100) {
+            wordCount = customCount;
+        }
+    } else {
+        wordCount = parseInt(wordCountSelect.value);
+    }
+
+    const sortedTraits = [...traits]
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, wordCount);
+
+    const counts = sortedTraits.map(item => item[1]);
+    const maxCount = Math.max(...counts);
+    const minCount = Math.min(...counts);
+    const containerWidth = container.clientWidth;
+
+    const minFontSize = containerWidth <= 400 ? 10 : 16;
+    const maxFontSize = containerWidth <= 400 ? 34 : 60;
+
+    const colors = [
+        "#404976",
+        "#722F37",
+        "#8B4B50",
+        "#3E735D",
+        "#8B7E3D"
+    ];
+
+    const wordList = sortedTraits.map(([word, count]) => {
+        const fontSize = minFontSize + (count - minCount) * (maxFontSize - minFontSize) / (maxCount - minCount || 1);
+        return [word, fontSize];
+    });
+
+    WordCloud(container, {
+        list: wordList,
+        color: () => colors[Math.floor(Math.random() * colors.length)],
+        backgroundColor: "transparent",
+        weightFactor: 1,
+        fontFamily: 'Arial, "Microsoft YaHei"',
+        rotateRatio: 0.6,
+        rotationSteps: 4,
+        minSize: 10,
+        drawOutOfBound: false,
+        shrinkToFit: true,
+        gridSize: containerWidth <= 400 ? 6 : 10,
+        shape: "circle",
+        classes: "word-cloud-text",
+
+        hover: function(item) {
+            if (!item) return;
+
+            const originalTrait = sortedTraits.find(trait => trait[0] === item[0]);
+
+            if (originalTrait) {
+                container.title = `${item[0]}: ${originalTrait[1]}次`;
+            }
+        }
+    });
+}
+
+/* 從後端取得資料 */
+function fetchData() {
+    const jobType = document.getElementById("jobType").value;
+
+    fetch(`/104/trait_analysis/get_traits_data/?jobType=${encodeURIComponent(jobType)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            const titlePrefix = jobType === "全部" ? "" : jobType;
+
+            document.getElementById("wordCloudTitle").textContent = `${titlePrefix}文字雲`;
+            document.getElementById("radarChartTitle").textContent = `${titlePrefix}雷達圖`;
+
+            if (fullData === null) {
+                fullData = data.alltraits;
+                jobDatasets = {};
+            }
+
+            currentTraits = data.traits;
+
+            renderRadarChart(fullData, jobType);
+            renderWordCloud(currentTraits);
+        })
+        .catch(error => {
+            console.error("取得個人特質資料失敗：", error);
+        });
+}
+
+/* 初始化 */
+document.addEventListener("DOMContentLoaded", function() {
+    const jobTypeSelect = document.getElementById("jobType");
+    const wordCountSelect = document.getElementById("wordCount");
+    const customWordCount = document.getElementById("customWordCount");
+
+    fetchData();
+
+    jobTypeSelect.addEventListener("change", fetchData);
+
+    wordCountSelect.addEventListener("change", function() {
+        if (this.value === "custom") {
+            customWordCount.style.display = "block";
+            customWordCount.focus();
+        } else {
+            customWordCount.style.display = "none";
+            renderWordCloud(currentTraits);
+        }
+    });
+
+    customWordCount.addEventListener("change", function() {
+        let value = parseInt(this.value);
+
+        if (isNaN(value) || value < 1 || value > 100) {
+            alert("請輸入 1-100 之間的數字");
+            value = 50;
+            this.value = value;
+        }
+
+        renderWordCloud(currentTraits);
+    });
+
+    /* 瀏覽器改變大小時重新畫文字雲 */
+    window.addEventListener("resize", function() {
+        clearTimeout(resizeTimer);
+
+        resizeTimer = setTimeout(function() {
+            if (currentTraits.length > 0) {
+                renderWordCloud(currentTraits);
+            }
+
+            if (radarChart) {
+                radarChart.resize();
+            }
+        }, 200);
+    });
+});
+</script>
+{% endblock %}
