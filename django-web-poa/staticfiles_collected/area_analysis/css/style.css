@@ -1,0 +1,64 @@
+.custom-div-icon {
+    background: transparent;
+    border: none;
+}
+
+.marker-content {
+    background: #404976;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+
+.marker-content:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s;
+}
+
+.marker-content i {
+    font-size: 16px;
+    margin-bottom: 2px;
+}
+
+.job-count {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#totalJobs {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#jobListTitle {
+    padding: 10px;
+    background: #f8f9fa;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #404976;
+    color: white;
+}
+
+.job-details-container {
+    height: 100%;
+    overflow-y: auto;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+}
