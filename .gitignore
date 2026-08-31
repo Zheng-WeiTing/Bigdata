@@ -11,10 +11,6 @@ staticfiles_collected/
 # PostgreSQL
 postgres_data/
 
-# Environment variables
-.env
-*.env
-
 # macOS
 .DS_Store
 
@@ -32,3 +28,4 @@ env/
 
 # Ollama data
 ollama-data/
+
